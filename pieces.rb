@@ -1,11 +1,3 @@
-class Empty
-    def initialize
-        @icon = "#"
-    end
-    def icon
-        return @icon
-    end
-end
 
 Cordinets = Struct.new(:x, :y) do
 end
@@ -32,7 +24,7 @@ class Piece
     def color
         return @color
     end
-
+    
     # Beskrivning: Returnerar pjäsens position/cordinater
     # Return: Cordinets: pjäsens position
     # Exempel:
@@ -46,11 +38,27 @@ class Piece
         return @position
     end
 
-    def move(position)
+    # Beskrivning: Muterar pjäsens position. Flytar pjäsen på brädan och lämnar indexet den var på som ett blankt object. Om det är viktigt för pjäsen så sparas det att den har flytat på sig
+    # Argument 1: Cordinets: Positionen som pjäsen ska flyta sig till.
+    # Argument 2: 2D-Array: Spelbrädan
+    # Return: void
+    # Exempel:
+    # Datum: 22/4/2024
+    # Namn: Noah Westerberg
+    def move(position, board)
+        board[@position.y][@position.y] = Empty.new
+        board[position.y][position.x] = self.copy
+
         @position = position
         if (@has_moved != nil)
             @has_moved = true
         end
+    end
+end
+
+class Empty < Piece
+    def initialize
+        @icon = "#"
     end
 end
 
