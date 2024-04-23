@@ -1,5 +1,39 @@
 
 Cordinets = Struct.new(:x, :y) do
+    def +(cordinets)
+        return Cordinets.new(x + cordinets.x, y + cordinets.y)
+    end
+    def -(cordinets)
+        return Cordinets.new(x - cordinets.x, y - cordinets.y)
+    end
+    def *(num)
+        return Cordinets.new(x * num, y * num)
+    end
+    def /(num)
+        return Cordinets.new(x / num, y / num)
+    end
+end
+
+# Beskrivning: Avrundar till 1, -1 eller 0
+# Argument 1: Number/Int/float
+# Return: Int. 1 om värdet är större än sqrt(2) / 2, -1 om värdet är minder än -sqrt(2) / 2 eller annars 0
+# Exempel:
+#           round_angle(0) => 0
+#           round_angle(1) => 1
+#           round_angle(-1) => -1
+#           round_angle(0.71) => 1
+#           round_angle(0.70) => 0
+#           round_angle(0) => 0
+# Datum: 23/4/2024
+# Namn: Noah Westerberg
+def round_angle(num)
+    if num < (Math.sqrt(2) / 2) && num > -(Math.sqrt(2) / 2)
+        return 0
+    elsif num < -(Math.sqrt(2) / 2)
+        return -1
+    else 
+        return 1
+    end
 end
 
 class Piece
@@ -38,7 +72,7 @@ class Piece
         return @position
     end
 
-    # Beskrivning: Muterar pjäsens position. Flytar pjäsen på brädan och lämnar indexet den var på som ett blankt object. Om det är viktigt för pjäsen så sparas det att den har flytat på sig
+    # Beskrivning: Muterar pjäsens position. Flytar pjäsen på brädan och lämnar indexet den var på som ett blankt object (inplace). Om det är viktigt för pjäsen så sparas det att den har flytat på sig
     # Argument 1: Cordinets: Positionen som pjäsen ska flyta sig till.
     # Argument 2: 2D-Array: Spelbrädan
     # Return: void
@@ -46,8 +80,8 @@ class Piece
     # Datum: 22/4/2024
     # Namn: Noah Westerberg
     def move(position, board)
-        board[@position.y][@position.y] = Empty.new
         board[position.y][position.x] = self.copy
+        board[@position.y][@position.y] = Empty.new
 
         @position = position
         if (@has_moved != nil)
@@ -74,8 +108,37 @@ class Pawn < Piece
         return @has_moved
     end
 
+    # Beskrivning: Undersöker vart det är tillgängligt att flytta till.
+    # Argument 1: 2D-Array: spelbrädan
+    # Return: Cordinets[]: tillgängliga positioner
+    # Exempel:
+    # Datum: 23/4/2024
+    # Namn: Noah Westerberg
     def find_moves(board)
+        positions = []
+        if board[@position.y + 1][@position.x].class == Empty
+            positions.append(Cordinets.new(@position.x, @position.y + 1))
+        end
+        check_square = board[@position.y + 1][@position.x - 1]
+        if check_square.class != Empty
+            if check_square.color != @color
+                positions.append(Cordinets.new(@position.x - 1, @position.y + 1))
+            end
+        end
+        check_square = board[@position.y + 1][@position.x + 1]
+        if check_square.class != Empty
+            if check_square.color != @color
+                positions.append(Cordinets.new(@position.x + 1, @position.y + 1))
+            end
+        end
+        if @has_moved
+            return positions
+        end
+        if board[@position.y + 2][@position.x].class == Empty
+            positions.append(Cordinets.new(@position.x, @position.y + 2))
+        end
 
+        return positions
     end
 end
 
@@ -90,9 +153,27 @@ class King < Piece
     def has_moved
         return @has_moved
     end
-
+    # Beskrivning: Undersöker vart det är tillgängligt att flytta till.
+    # Argument 1: 2D-Array: spelbrädan
+    # Return: Cordinets[]: tillgängliga positioner
+    # Exempel:
+    # Datum: 23/4/2024
+    # Namn: Noah Westerberg
     def find_moves(board)
+        positions = []
+        angle = 0
+        while angle < 2 * Math::PI
+            new_position = Cordinets.new(@position.x + round_to_one(Math.cos(angle)), @position.y + round_to_one(Math.sin(angle)))
+            check_square = board[new_position.y][new_position.x]
+            if check_square.class == Empty
+                positions.append(new_position)
+            elsif check_square.color != @color
+                positions.append(new_position)
+            end
+            angle += Math::PI / 4
+        end
 
+        return positions
     end
 end
 
@@ -148,5 +229,3 @@ class Bishop < Piece
 
     end
 end
-
-
