@@ -28,9 +28,9 @@ end
 # Namn: Noah Westerberg
 def round_angle(num)
     # lite marginal för att undvika gränsfall
-    if num < -sqrt(2) + 1.1
+    if num < -Math.sqrt(2) + 1.1
         return -1
-    elsif num > sqrt(2) - 1.1
+    elsif num > Math.sqrt(2) - 1.1
         return 1
     else 
         return 0
@@ -43,6 +43,7 @@ class Piece
     # Exempel: 
     #       Pawn.icon => "P"
     #       Knigth.icon => "Kn"
+    #       Piece.icon => error
     # Datum: 22/4/2024
     # Namn: Noah Westerberg
     def icon
@@ -79,11 +80,11 @@ class Piece
     # Exempel:
     # Datum: 24/4/2024
     # Namn: Noah Westerberg
-    def targeted(color)
-        if color = "w"
-            return @targeted_by_white
-        else
+    def is_targeted(color)
+        if color == "w"
             return @targeted_by_black
+        else
+            return @targeted_by_white
         end
     end
 
@@ -94,7 +95,7 @@ class Piece
     # Datum: 24/4/2024
     # Namn: Noah Westerberg
     def set_targeted(color)
-        if color = "w"
+        if color == "w"
             @targeted_by_white = true
         else
             @targeted_by_black = true
@@ -108,7 +109,7 @@ class Piece
     # Datum: 24/4/2024
     # Namn: Noah Westerberg
     def remove_target(color)
-        if color = "w"
+        if color == "w"
             @targeted_by_white = false
         else
             @targeted_by_black = false
@@ -150,6 +151,12 @@ class Pawn < Piece
         @has_moved = false
         @targeted_by_white = false
         @targeted_by_black = false
+
+        if color == "w"
+            @direction = 1
+        else
+            @direction = -1
+        end
     end
 
     def has_moved
@@ -164,26 +171,30 @@ class Pawn < Piece
     # Namn: Noah Westerberg
     def find_moves(board)
         positions = []
-        if board[@position.y + 1][@position.x].class == Empty
-            positions.append(Cordinets.new(@position.x, @position.y + 1))
+        check_square = board[@position.y + @direction][@position.x]
+        if check_square.class == Empty
+            positions.append(check_square.position)
         end
-        check_square = board[@position.y + 1][@position.x - 1]
+        check_square = board[@position.y + @direction][@position.x - 1]
+        check_square.set_targeted(@color)
         if check_square.class != Empty
             if check_square.color != @color
-                positions.append(Cordinets.new(@position.x - 1, @position.y + 1))
+                positions.append(check_square.position)
             end
         end
-        check_square = board[@position.y + 1][@position.x + 1]
+        check_square = board[@position.y + @direction][@position.x + 1]
+        check_square.set_targeted(@color)
         if check_square.class != Empty
             if check_square.color != @color
-                positions.append(Cordinets.new(@position.x + 1, @position.y + 1))
+                positions.append(check_square.position)
             end
         end
         if @has_moved
             return positions
         end
-        if board[@position.y + 2][@position.x].class == Empty
-            positions.append(Cordinets.new(@position.x, @position.y + 2))
+        check_square = board[@position.y + (@direction * 2)][@position.x]
+        if check_square.class == Empty
+            positions.append(check_square.position)
         end
 
         return positions
@@ -214,19 +225,19 @@ class King < Piece
         positions = []
         angle = 0
         while angle < 2 * Math::PI
-            new_position = Cordinets.new(@position.x + round_to_one(Math.cos(angle)), @position.y + round_to_one(Math.sin(angle)))
+            new_position = Cordinets.new(@position.x + round_angle(Math.cos(angle)), @position.y + round_angle(Math.sin(angle)))
             angle += Math::PI / 4
             
             check_square = board[new_position.y][new_position.x]
-            if check_square.targeted
-                next
-            end 
+            check_square.set_targeted(@color)
             if check_square.class == Empty
                 positions.append(new_position)
-                board[new_position.y][new_position.x].set_targeted
             elsif check_square.color != @color
                 positions.append(new_position)
-                board[new_position.y][new_position.x].set_targeted
+            end
+            # Ser kneppt ut att set_targeted används och så kollar man om rutan är attackerad precise efter, men is_targeted returnerar om den motsatta färgen attackerar
+            if check_square.is_targeted(@color)
+                positions.delete(new_position)
             end
         end
 
@@ -257,16 +268,16 @@ class Queen < Piece
             
             i = 0
             while i < 8
-                new_position = Cordinets.new(@position.x + round_to_one(Math.cos(angle)) + i, @position.y + round_to_one(Math.sin(angle)) + i)
+                new_position = Cordinets.new(@position.x + round_angle(Math.cos(angle)) + i, @position.y + round_angle(Math.sin(angle)) + i)
                 i += 1
 
                 check_square = board[new_position.y][new_position.x]
                 if check_square.class == Empty
                     positions.Add(new_position)
-                    board[new_position.y][new_position.x].set_targeted
+                    check_square.set_targeted(@color)
                 elsif check_square.color != @color
                     positions.Add(new_position)
-                    board[new_position.y][new_position.x].set_targeted
+                    check_square.set_targeted(@color)
                     break
                 else
                     break
