@@ -144,7 +144,7 @@ class Piece
 
     # Beskrivning:
     # Argument 1:
-    # Return:
+    # Return: Inget
     # Exempel:
     # Datum: 24/4/2024
     # Namn: Noah Westerberg
@@ -329,7 +329,7 @@ class Queen < Piece
                 y_dir += 1
             end
             x_dir += 1
-
+        end
         return positions
     end
 end
