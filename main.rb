@@ -49,7 +49,7 @@ board[6][7] = Pawn.new(Vector2.new(7, 6), "b")
 # draw_board(board, false)
 
 # Beskrivning: Omvandlar en rutbetäckning till cordinater
-# Argument 1: String: rutbetöckning
+# Argument 1: String: rutbetöckning. De första två karaktärerna ska vara rutbetäckningen 
 # Return: Vector2: cordinater. nil: error
 # Exempel:
 #       square_to_cordinets("a1") => (0, 0)
@@ -62,6 +62,10 @@ board[6][7] = Pawn.new(Vector2.new(7, 6), "b")
 # Datum: 2/5/2024
 # Namn: Noah Westerberg
 def square_to_cordinets(square)
+    if (square.length < 2)
+        return nil
+    end
+    
     x = 0
     y = square[1].to_i - 1 
     if y < 0
@@ -91,13 +95,20 @@ def square_to_cordinets(square)
     return Vector2.new(x, y)
 end
 
-input = gets.chomp
-while input != "quit"
-    if (input.length < 2)
-        input = gets.chomp
-        next
-    end
-    square = input[0].downcase + input[1]
-    p square_to_cordinets(square)
+# Beskrivning:
+# Return: Vector2: cordinaterna för rutan som är vald
+# Exempel:
+# Datum: 3/5/2024
+# Namn: Noah Westerberg
+def input_square()
     input = gets.chomp
+    if (input.length < 2)
+        return input_square()
+    end
+    position = square_to_cordinets(input)
+    if (position == nil)
+        return input_square()
+    end
+    return position
 end
+
