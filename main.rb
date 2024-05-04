@@ -159,51 +159,56 @@ def input_square()
     return position
 end
 
-turn = 0
-is_fliped = false
+def game()
+    turn = 0
+    is_fliped = false
 
-while true
-    current_player = Player.new
-    if turn % 2 == 0
-        current_player = player1
-    else
-        current_player = player2
-    end
+    while true
+        current_player = Player.new
+        if turn % 2 == 0
+            current_player = player1
+        else
+            current_player = player2
+        end
 
-    p current_player
-    p current_player.color
+        p current_player
+        p current_player.color
 
-    for row in board
-        for square in row
-            if (square.class == Empty)
-                next
+        for row in board
+            for square in row
+                if (square.class == Empty)
+                    next
+                end
+                square.find_moves(board)
             end
-            square.find_moves(board)
         end
-    end
 
-    draw_board(board, is_fliped, [])
-    
-    selected_square = Empty.new
-    avalible_positions = []
-    while avalible_positions.length == 0
+        draw_board(board, is_fliped, [])
+
         selected_square = Empty.new
-        while selected_square.color != current_player.color
-            square_coordinets = input_square()
-            selected_square = board[square_coordinets.y][square_coordinets.x]
+        avalible_positions = []
+        while avalible_positions.length == 0
+            selected_square = Empty.new
+            while selected_square.color != current_player.color
+                square_coordinets = input_square()
+                selected_square = board[square_coordinets.y][square_coordinets.x]
+            end
+            avalible_positions = selected_square.find_moves(board)
         end
-        avalible_positions = selected_square.find_moves(board)
+
+        draw_board(board, is_fliped, avalible_positions)
+
+        move_coordinets = Vector2.new
+        while !avalible_positions.include?(move_coordinets)
+            move_coordinets = input_square()
+        end
+
+        selected_square.move(move_coordinets, board)
+
+        turn += 1
+        is_fliped = !is_fliped
     end
-
-    draw_board(board, is_fliped, avalible_positions)
-
-    move_coordinets = Vector2.new
-    while !avalible_positions.include?(move_coordinets)
-        move_coordinets = input_square()
-    end
-
-    selected_square.move(move_coordinets, board)
-    
-    turn += 1
-    is_fliped = !is_fliped
 end
+
+
+game()
