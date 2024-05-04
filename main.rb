@@ -46,6 +46,8 @@ board[6][5] = Pawn.new(Vector2.new(5, 6), "b")
 board[6][6] = Pawn.new(Vector2.new(6, 6), "b")
 board[6][7] = Pawn.new(Vector2.new(7, 6), "b")
 
+board[4][3] = Queen.new(Vector2.new(3, 4), "b")
+
 # Beskrivning: Omvandlar en rutbetäckning till cordinater
 # Argument 1: String: rutbetöckning. De första två karaktärerna ska vara rutbetäckningen 
 # Return: Vector2: cordinater. nil: error

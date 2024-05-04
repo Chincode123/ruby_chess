@@ -69,18 +69,26 @@ end
 # Datum: 4/5/2024
 # Namn: Noah Westerberg
 def check_squares_in_line(board, position, cursor_shift, color, out)
-    x = position.x
-    y = position.y
+    p position
+    
+    x = position.x + cursor_shift.x
+    y = position.y + cursor_shift.y
     while x < board.length && y < board.length && x >= 0 && y >= 0
+        p "loop x:#{x} y:#{y}"
+
         check_square = board[y][x]
+        p check_square
         check_square.set_targeted(color)
         if (check_square.class != Empty)
             if (check_square.color == color)
                 break
             end
+
+            out.append(Vector2.new(x, y))
+            break
         end
         
-        out.append(check_square)
+        out.append(Vector2.new(x, y))
         x += cursor_shift.x
         y += cursor_shift.y
     end
