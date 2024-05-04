@@ -112,8 +112,7 @@ end
 
 is_fliped = false
 
-quit = ""
-while quit != "quit"
+while true
     for row in board
         for square in row
             if (square.class == Empty)
@@ -131,7 +130,6 @@ while quit != "quit"
         selected_square = Empty.new
         while selected_square.class == Empty
             square_coordinets = input_square()
-            p "input: #{square_coordinets}"
             selected_square = board[square_coordinets.y][square_coordinets.x]
         end
         avalible_positions = selected_square.find_moves(board)
@@ -147,6 +145,5 @@ while quit != "quit"
 
     selected_square.move(move_coordinets, board)
     
-    quit = gets.chomp
-    fliped = !fliped
+    is_fliped = !is_fliped
 end

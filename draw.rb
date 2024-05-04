@@ -28,18 +28,18 @@ def draw_board(board, fliped, highlighted_squares)
             if board[i][j].color == nil
                 square_text = Rainbow(square_text).hide
             elsif board[i][j].color == "w"
-                square_text = Rainbow(square_text).snow
+                square_text = Rainbow(square_text).bisque
             else
                 square_text = Rainbow(square_text).black
             end
 
             if (j + i) % 2 == 0
-                square_text = Rainbow(square_text).bg(:bisque)
+                square_text = Rainbow(square_text).bg(:burlywood)
             else
-                square_text = Rainbow(square_text).bg(:black)
+                square_text = Rainbow(square_text).bg(:brown)
             end
 
-            if (highlighted_squares.include?(current_square.position))
+            if (highlighted_squares.include?(Vector2.new(j, i)))
                 square_text = Rainbow(square_text).bg(:blue).red
             end
 

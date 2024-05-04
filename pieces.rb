@@ -46,7 +46,7 @@ end
 # Datum: 30/4/2024
 # Namn: Noah Westerberg
 def check_square(board, square_position, color, out)
-    if square_position.x < board[square_position.y].length && square_position.y < board.length && square_position.x >= 0 && square_position.y >= 0
+    if square_position.x < board.length && square_position.y < board.length && square_position.x >= 0 && square_position.y >= 0
         check_square = board[square_position.y][square_position.x]
         check_square.set_targeted(color)
         if check_square.class == Empty
@@ -71,7 +71,7 @@ end
 def check_squares_in_line(board, position, cursor_shift, color, out)
     x = position.x
     y = position.y
-    while x < board[y].length && y < board.length && x >= 0 && y >= 0
+    while x < board.length && y < board.length && x >= 0 && y >= 0
         check_square = board[y][x]
         check_square.set_targeted(color)
         if (check_square.class != Empty)
@@ -173,7 +173,7 @@ class Piece
     # Datum: 4/5/2024
     # Namn: Noah Westerberg
     def move(position, board)
-        board[@position][@position] = Empty.new
+        board[@position.y][@position.x] = Empty.new
 
         if (self.class == Pawn || self.class == King || self.class == Rook)
             @has_moved = true
@@ -237,7 +237,7 @@ class Pawn < Piece
                 end
             end
         end
-        if (@position.x < board.length)
+        if (@position.x < board.length - 1)
             check_square = board[@position.y + @direction][@position.x + 1]
             check_square.set_targeted(@color)
             if check_square.class != Empty
