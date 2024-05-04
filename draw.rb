@@ -1,43 +1,49 @@
 require "rainbow"
 using Rainbow
 
-def draw_board(board, fliped)
+
+def draw_board(board, fliped, highlighted_squares)
     if fliped
         print "  H|G|F|E|D|C|B|A\n"
         i = 0
-        loop_end_value = 8
+        loop_end_value = board.length
     else
         print "  A|B|C|D|E|F|G|H\n"
-        i = 7
+        i = board.length - 1
         loop_end_value = -1
     end
     while i != loop_end_value
         print "#{i+1}|"
         j = 0
         if fliped
-            j = 7
+            j = board.length - 1
         end
         while j != 7 - loop_end_value
-            current_space = board[i][j].icon
+            current_square = board[i][j]
+            square_text = current_square.icon
             if board[i][j].class != Knight
-                current_space += " "
+                square_text += " "
             end
             
             if board[i][j].color == nil
-                current_space = Rainbow(current_space).hide
+                square_text = Rainbow(square_text).hide
             elsif board[i][j].color == "w"
-                current_space = Rainbow(current_space).snow
+                square_text = Rainbow(square_text).snow
             else
-                current_space = Rainbow(current_space).black
+                square_text = Rainbow(square_text).black
             end
 
             if (j + i) % 2 == 0
-                current_space = Rainbow(current_space).bg(:bisque)
+                square_text = Rainbow(square_text).bg(:bisque)
             else
-                current_space = Rainbow(current_space).bg(:black)
+                square_text = Rainbow(square_text).bg(:black)
             end
 
-            print current_space
+            if (highlighted_squares.include?(current_square.position))
+                square_text = Rainbow(square_text).bg(:blue).red
+            end
+
+            print square_text
             
             if fliped
                 j -= 1

@@ -51,27 +51,24 @@ def check_square(board, square_position, color, out)
         check_square.set_targeted(color)
         if check_square.class == Empty
             out.append(square_position)
-            return
         elsif check_square.color != color
             out.append(square_position)
         end
     end
 end
 
-
 # Beskrivning: Lägger till rutor som finns i samma rad från en startposition och returnerar det.
 # Argument 1: Array, spelbrädan
 # Argument 2: Vector2, användarpjäsens position
 # Argument 3: Vector2, hur marökern som sätter in rutorna justeras
 # Argument 4: String: användar pjäsens färg
-# Return: Array, rutor i en rad
+# Argument 5: Array: output-array
+# Return: Inget
 # Exempel:
 #       Argument3/cursor_shift = (0, 0) => oändlig loop
-# Datum: 29/4/2024
+# Datum: 4/5/2024
 # Namn: Noah Westerberg
-def check_squares_in_line(board, position, cursor_shift, color)
-    squares = []
-    
+def check_squares_in_line(board, position, cursor_shift, color, out)
     x = position.x
     y = position.y
     while x < board[y].length && y < board.length && x >= 0 && y >= 0
@@ -83,12 +80,10 @@ def check_squares_in_line(board, position, cursor_shift, color)
             end
         end
         
-        squares.append(check_square)
+        out.append(check_square)
         x += cursor_shift.x
         y += cursor_shift.y
     end
-
-    return squares
 end
 
 class Piece
@@ -175,18 +170,20 @@ class Piece
     # Argument 2: 2D-Array: Spelbrädan
     # Return: void
     # Exempel:
-    # Datum: 22/4/2024
+    # Datum: 4/5/2024
     # Namn: Noah Westerberg
     def move(position, board)
-        board[position.y][position.x] = self.copy
-        board[@position.y][@position.y] = Empty.new
+        board[@position][@position] = Empty.new
 
-        @position = position
-        if (@has_moved != nil)
+        if (self.class == Pawn || self.class == King || self.class == Rook)
             @has_moved = true
         end
+            
+        @position = position
+        serialized_piece = Marshal.dump(self)
+        board[position.y][position.x] = Marshal.load(serialized_piece)
     end
-
+    
 end
 
 class Empty < Piece
@@ -221,31 +218,39 @@ class Pawn < Piece
     # Argument 1: 2D-Array: spelbrädan
     # Return: Vector2[]: tillgängliga positioner
     # Exempel:
-    # Datum: 23/4/2024
+    # Datum: 4/5/2024
     # Namn: Noah Westerberg
     def find_moves(board)
         positions = []
-        check_square = board[@position.y + @direction][@position.x]
-        if check_square.class == Empty
-            positions.append(check_square.position)
-        end
-        check_square = board[@position.y + @direction][@position.x - 1]
-        check_square.set_targeted(@color)
-        if check_square.class != Empty
-            if check_square.color != @color
+        if (@position.y < board.length)
+            check_square = board[@position.y + @direction][@position.x]
+            if check_square.class == Empty
                 positions.append(check_square.position)
             end
         end
-        check_square = board[@position.y + @direction][@position.x + 1]
-        check_square.set_targeted(@color)
-        if check_square.class != Empty
-            if check_square.color != @color
-                positions.append(check_square.position)
+        if (@position.x > 0)
+            check_square = board[@position.y + @direction][@position.x - 1]
+            check_square.set_targeted(@color)
+            if check_square.class != Empty
+                if check_square.color != @color
+                    positions.append(check_square.position)
+                end
             end
         end
+        if (@position.x < board.length)
+            check_square = board[@position.y + @direction][@position.x + 1]
+            check_square.set_targeted(@color)
+            if check_square.class != Empty
+                if check_square.color != @color
+                    positions.append(check_square.position)
+                end
+            end
+        end
+        
         if @has_moved
             return positions
         end
+
         check_square = board[@position.y + (@direction * 2)][@position.x]
         if check_square.class == Empty
             positions.append(check_square.position)
@@ -273,7 +278,7 @@ class King < Piece
     # Argument 1: 2D-Array: spelbrädan
     # Return: Vector2[]: tillgängliga positioner
     # Exempel:
-    # Datum: 23/4/2024
+    # Datum: 4/5/2024
     # Namn: Noah Westerberg
     def find_moves(board)
         positions = []
@@ -282,16 +287,12 @@ class King < Piece
             new_position = Vector2.new(@position.x + round_angle(Math.cos(angle)), @position.y + round_angle(Math.sin(angle)))
             angle += Math::PI / 4
 
-            check_square = board[new_position.y][new_position.x]
-            check_square.set_targeted(@color)
-            if check_square.class == Empty
-                positions.append(new_position)
-            elsif check_square.color != @color
-                positions.append(new_position)
-            end
-            # Ser kneppt ut att set_targeted används och så kollar man om rutan är attackerad precise efter, men is_targeted returnerar om den motsatta färgen attackerar
-            if check_square.is_targeted(@color)
-                positions.delete(new_position)
+            check_square(board, new_position, @color, positions)
+        end
+
+        for position in positions
+            if (board[position.y][position.x].is_targeted(@color))
+                positions.delete(position)
             end
         end
 
@@ -325,7 +326,7 @@ class Queen < Piece
                     y_dir += 1
                     next
                 end
-                positions.concat(check_squares_in_line(board, @position, Vector2.new(x_dir, y_dir), @color))
+                check_squares_in_line(board, @position, Vector2.new(x_dir, y_dir), @color, positions)
                 y_dir += 1
             end
             x_dir += 1
@@ -356,8 +357,8 @@ class Knight < Piece
         while x_dir <= 1
             y_dir = -1
             while y_dir <= 1
-                check_square(board, @position + Vector2.new(3 * x_dir, 1 * y_dir), @color, positions)
-                check_square(board, @position + Vector2.new(1 * x_dir, 3 * y_dir), @color, positions)
+                check_square(board, @position + Vector2.new(2 * x_dir, 1 * y_dir), @color, positions)
+                check_square(board, @position + Vector2.new(1 * x_dir, 2 * y_dir), @color, positions)
                 y_dir += 2
             end
             x_dir += 2
@@ -390,10 +391,10 @@ class Rook < Piece
     def find_moves(board)
         positions = []
 
-        positions.concat(check_squares_in_line(board, @position, Vector2.new(1, 0), @color)) 
-        positions.concat(check_squares_in_line(board, @position, Vector2.new(-1, 0), @color)) 
-        positions.concat(check_squares_in_line(board, @position, Vector2.new(0, 1), @color)) 
-        positions.concat(check_squares_in_line(board, @position, Vector2.new(0, -1), @color)) 
+        check_squares_in_line(board, @position, Vector2.new(1, 0), @color, positions)
+        check_squares_in_line(board, @position, Vector2.new(-1, 0), @color, positions)
+        check_squares_in_line(board, @position, Vector2.new(0, 1), @color, positions)
+        check_squares_in_line(board, @position, Vector2.new(0, -1), @color, positions) 
 
         return positions
     end
@@ -421,7 +422,7 @@ class Bishop < Piece
         while x_dir <= 1
             y_dir = -1
             while y_dir <= 1
-                positions.concat(check_squares_in_line(board, @position, Vector2.new(x_dir, y_dir), @color))
+                check_squares_in_line(board, @position, Vector2.new(x_dir, y_dir), @color, positions)
                 y_dir += 2
             end
             x_dir += 2

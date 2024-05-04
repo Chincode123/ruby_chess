@@ -46,22 +46,20 @@ board[6][5] = Pawn.new(Vector2.new(5, 6), "b")
 board[6][6] = Pawn.new(Vector2.new(6, 6), "b")
 board[6][7] = Pawn.new(Vector2.new(7, 6), "b")
 
-# draw_board(board, false)
-
 # Beskrivning: Omvandlar en rutbetäckning till cordinater
 # Argument 1: String: rutbetöckning. De första två karaktärerna ska vara rutbetäckningen 
 # Return: Vector2: cordinater. nil: error
 # Exempel:
-#       square_to_cordinets("a1") => (0, 0)
-#       square_to_cordinets("h8") => (7, 7) 
-#       square_to_cordinets("e4") => (4, 4) 
-#       square_to_cordinets("E4") => (4, 4) 
-#       square_to_cordinets("N2") => nil
-#       square_to_cordinets("cb") => nil
-#       square_to_cordinets("d0") => nil
+#       square_to_coordinets("a1") => (0, 0)
+#       square_to_coordinets("h8") => (7, 7) 
+#       square_to_coordinets("e4") => (4, 4)     
+#       square_to_coordinets("E4") => (4, 4) 
+#       square_to_coordinets("N2") => nil
+#       square_to_coordinets("cb") => nil
+#       square_to_coordinets("d0") => nil
 # Datum: 2/5/2024
 # Namn: Noah Westerberg
-def square_to_cordinets(square)
+def square_to_coordinets(square)
     if (square.length < 2)
         return nil
     end
@@ -105,10 +103,50 @@ def input_square()
     if (input.length < 2)
         return input_square()
     end
-    position = square_to_cordinets(input)
+    position = square_to_coordinets(input)
     if (position == nil)
         return input_square()
     end
     return position
 end
 
+is_fliped = false
+
+quit = ""
+while quit != "quit"
+    for row in board
+        for square in row
+            if (square.class == Empty)
+                next
+            end
+            square.find_moves(board)
+        end
+    end
+
+    draw_board(board, is_fliped, [])
+    
+    selected_square = Empty.new
+    avalible_positions = []
+    while avalible_positions.length == 0
+        selected_square = Empty.new
+        while selected_square.class == Empty
+            square_coordinets = input_square()
+            p "input: #{square_coordinets}"
+            selected_square = board[square_coordinets.y][square_coordinets.x]
+        end
+        avalible_positions = selected_square.find_moves(board)
+        p "positions: #{avalible_positions}"
+    end
+
+    draw_board(board, is_fliped, avalible_positions)
+
+    move_coordinets = Vector2.new
+    while !avalible_positions.include?(move_coordinets)
+        move_coordinets = input_square()
+    end
+
+    selected_square.move(move_coordinets, board)
+    
+    quit = gets.chomp
+    fliped = !fliped
+end
