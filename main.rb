@@ -1,6 +1,53 @@
 require_relative "pieces.rb"
 require_relative "draw.rb"
 
+# Beskrivning: Returnerar hur många poäng en pjäs är värd
+# Argument 1: Piece
+# Return: Integer: poängvärdet av pjäsen
+# Exempel:
+#       piece_to_points(Pawn) => 1
+#       piece_to_points(Knight) => 3
+#       piece_to_points(Bishop) => 3
+#       piece_to_points(Rook) => 5
+#       piece_to_points(Queen) => 9
+# Noah Westerberg
+# Datum 4/5/2024
+def piece_to_points(piece)
+    if piece.class == Pawn
+        return 1
+    elsif piece.class == Knight || piece.class == Bishop
+        return 3
+    elsif piece.class == Rook
+        return 5
+    elsif piece.class == Queen
+        return 9
+    end
+end
+
+Player = Struct.new(:name, :color) do
+    # Beskrivning: Returnerar hur många poäng spelaren har
+    # Argument 1: 2D-Array: Spelbrädan
+    # Return: Integer
+    # Exempel: 
+    # Noah Westerberg
+    # Datum 5/5/2024
+    def points(board)
+        points = 0
+        for row in board
+            for piece in row
+                if piece.class != Empty
+                    if piece.color == color
+                        points += piece_to_points(piece)
+                    end
+                end
+            end
+        end
+    end
+end
+
+player1 = Player.new
+player2 = Player.new
+
 board = [
     [Empty.new, Empty.new, Empty.new, Empty.new, Empty.new, Empty.new, Empty.new, Empty.new],
     [Empty.new, Empty.new, Empty.new, Empty.new, Empty.new, Empty.new, Empty.new, Empty.new],
@@ -12,41 +59,41 @@ board = [
     [Empty.new, Empty.new, Empty.new, Empty.new, Empty.new, Empty.new, Empty.new, Empty.new]
     ]
 
-board[0][0] = Rook.new(Vector2.new(0, 0), "w")
-board[0][7] = Rook.new(Vector2.new(7, 0), "w")
-board[0][1] = Knight.new(Vector2.new(1, 0), "w")
-board[0][6] = Knight.new(Vector2.new(6, 0), "w")
-board[0][2] = Bishop.new(Vector2.new(2, 0), "w")
-board[0][5] = Bishop.new(Vector2.new(5, 0), "w")
-board[0][4] = King.new(Vector2.new(4, 0), "w")
-board[0][3] = Queen.new(Vector2.new(3, 0), "w")
-board[1][0] = Pawn.new(Vector2.new(0, 1), "w")
-board[1][1] = Pawn.new(Vector2.new(1, 1), "w")
-board[1][2] = Pawn.new(Vector2.new(2, 1), "w")
-board[1][3] = Pawn.new(Vector2.new(3, 1), "w")
-board[1][4] = Pawn.new(Vector2.new(4, 1), "w")
-board[1][5] = Pawn.new(Vector2.new(5, 1), "w")
-board[1][6] = Pawn.new(Vector2.new(6, 1), "w")
-board[1][7] = Pawn.new(Vector2.new(7, 1), "w")
+# white pieces
+board[0][0] = Rook.new(Vector2.new(0, 0), "white")
+board[0][7] = Rook.new(Vector2.new(7, 0), "white")
+board[0][1] = Knight.new(Vector2.new(1, 0), "white")
+board[0][6] = Knight.new(Vector2.new(6, 0), "white")
+board[0][2] = Bishop.new(Vector2.new(2, 0), "white")
+board[0][5] = Bishop.new(Vector2.new(5, 0), "white")
+board[0][4] = King.new(Vector2.new(4, 0), "white")
+board[0][3] = Queen.new(Vector2.new(3, 0), "white")
+board[1][0] = Pawn.new(Vector2.new(0, 1), "white")
+board[1][1] = Pawn.new(Vector2.new(1, 1), "white")
+board[1][2] = Pawn.new(Vector2.new(2, 1), "white")
+board[1][3] = Pawn.new(Vector2.new(3, 1), "white")
+board[1][4] = Pawn.new(Vector2.new(4, 1), "white")
+board[1][5] = Pawn.new(Vector2.new(5, 1), "white")
+board[1][6] = Pawn.new(Vector2.new(6, 1), "white")
+board[1][7] = Pawn.new(Vector2.new(7, 1), "white")
 
-board[7][0] = Rook.new(Vector2.new(0, 7), "b")
-board[7][7] = Rook.new(Vector2.new(7, 7), "b")
-board[7][1] = Knight.new(Vector2.new(1, 7), "b")
-board[7][6] = Knight.new(Vector2.new(6, 7), "b")
-board[7][2] = Bishop.new(Vector2.new(2, 7), "b")
-board[7][5] = Bishop.new(Vector2.new(5, 7), "b")
-board[7][4] = King.new(Vector2.new(4, 7), "b")
-board[7][3] = Queen.new(Vector2.new(3, 7), "b")
-board[6][0] = Pawn.new(Vector2.new(0, 6), "b")
-board[6][1] = Pawn.new(Vector2.new(1, 6), "b")
-board[6][2] = Pawn.new(Vector2.new(2, 6), "b")
-board[6][3] = Pawn.new(Vector2.new(3, 6), "b")
-board[6][4] = Pawn.new(Vector2.new(4, 6), "b")
-board[6][5] = Pawn.new(Vector2.new(5, 6), "b")
-board[6][6] = Pawn.new(Vector2.new(6, 6), "b")
-board[6][7] = Pawn.new(Vector2.new(7, 6), "b")
-
-board[4][3] = Queen.new(Vector2.new(3, 4), "b")
+# black pieces
+board[7][0] = Rook.new(Vector2.new(0, 7), "black")
+board[7][7] = Rook.new(Vector2.new(7, 7), "black")
+board[7][1] = Knight.new(Vector2.new(1, 7), "black")
+board[7][6] = Knight.new(Vector2.new(6, 7), "black")
+board[7][2] = Bishop.new(Vector2.new(2, 7), "black")
+board[7][5] = Bishop.new(Vector2.new(5, 7), "black")
+board[7][4] = King.new(Vector2.new(4, 7), "black")
+board[7][3] = Queen.new(Vector2.new(3, 7), "black")
+board[6][0] = Pawn.new(Vector2.new(0, 6), "black")
+board[6][1] = Pawn.new(Vector2.new(1, 6), "black")
+board[6][2] = Pawn.new(Vector2.new(2, 6), "black")
+board[6][3] = Pawn.new(Vector2.new(3, 6), "black")
+board[6][4] = Pawn.new(Vector2.new(4, 6), "black")
+board[6][5] = Pawn.new(Vector2.new(5, 6), "black")
+board[6][6] = Pawn.new(Vector2.new(6, 6), "black")
+board[6][7] = Pawn.new(Vector2.new(7, 6), "black")
 
 # Beskrivning: Omvandlar en rutbetäckning till cordinater
 # Argument 1: String: rutbetöckning. De första två karaktärerna ska vara rutbetäckningen 

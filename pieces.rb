@@ -108,10 +108,10 @@ class Piece
     end
 
     # Beskrivning: Returnerar pjäsens färg/vilken spelare den tillhör
-    # Return: String: pjäsens färg, antingen "w" eller "b"
+    # Return: String: pjäsens färg, antingen "white" eller "black"
     # Exempel:
-    #       Piece.color => "w"
-    #       Piece.color => "b"
+    #       Piece.color => "white"
+    #       Piece.color => "black"
     # Datum: 22/4/2024
     # Namn: Noah Westerberg
     def color
@@ -138,7 +138,7 @@ class Piece
     # Datum: 24/4/2024
     # Namn: Noah Westerberg
     def is_targeted(color)
-        if color == "w"
+        if color == "white"
             return @targeted_by_black
         else
             return @targeted_by_white
@@ -152,7 +152,7 @@ class Piece
     # Datum: 24/4/2024
     # Namn: Noah Westerberg
     def set_targeted(color)
-        if color == "w"
+        if color == "white"
             @targeted_by_white = true
         else
             @targeted_by_black = true
@@ -166,7 +166,7 @@ class Piece
     # Datum: 24/4/2024
     # Namn: Noah Westerberg
     def remove_target(color)
-        if color == "w"
+        if color == "white"
             @targeted_by_white = false
         else
             @targeted_by_black = false
@@ -211,7 +211,7 @@ class Pawn < Piece
         @targeted_by_white = false
         @targeted_by_black = false
 
-        if color == "w"
+        if color == "white"
             @direction = 1
         else
             @direction = -1

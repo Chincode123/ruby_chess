@@ -27,7 +27,7 @@ def draw_board(board, fliped, highlighted_squares)
             
             if board[i][j].color == nil
                 square_text = Rainbow(square_text).hide
-            elsif board[i][j].color == "w"
+            elsif board[i][j].color == "white"
                 square_text = Rainbow(square_text).bisque
             else
                 square_text = Rainbow(square_text).black
