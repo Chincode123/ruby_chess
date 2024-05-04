@@ -45,8 +45,8 @@ Player = Struct.new(:name, :color) do
     end
 end
 
-player1 = Player.new
-player2 = Player.new
+player1 = Player.new("Player 1", "white")
+player2 = Player.new("Player 2", "black")
 
 board = [
     [Empty.new, Empty.new, Empty.new, Empty.new, Empty.new, Empty.new, Empty.new, Empty.new],
@@ -159,9 +159,20 @@ def input_square()
     return position
 end
 
+turn = 0
 is_fliped = false
 
 while true
+    current_player = Player.new
+    if turn % 2 == 0
+        current_player = player1
+    else
+        current_player = player2
+    end
+
+    p current_player
+    p current_player.color
+
     for row in board
         for square in row
             if (square.class == Empty)
@@ -177,12 +188,11 @@ while true
     avalible_positions = []
     while avalible_positions.length == 0
         selected_square = Empty.new
-        while selected_square.class == Empty
+        while selected_square.color != current_player.color
             square_coordinets = input_square()
             selected_square = board[square_coordinets.y][square_coordinets.x]
         end
         avalible_positions = selected_square.find_moves(board)
-        p "positions: #{avalible_positions}"
     end
 
     draw_board(board, is_fliped, avalible_positions)
@@ -194,5 +204,6 @@ while true
 
     selected_square.move(move_coordinets, board)
     
+    turn += 1
     is_fliped = !is_fliped
 end

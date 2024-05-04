@@ -69,15 +69,10 @@ end
 # Datum: 4/5/2024
 # Namn: Noah Westerberg
 def check_squares_in_line(board, position, cursor_shift, color, out)
-    p position
-    
     x = position.x + cursor_shift.x
     y = position.y + cursor_shift.y
     while x < board.length && y < board.length && x >= 0 && y >= 0
-        p "loop x:#{x} y:#{y}"
-
         check_square = board[y][x]
-        p check_square
         check_square.set_targeted(color)
         if (check_square.class != Empty)
             if (check_square.color == color)
@@ -95,41 +90,7 @@ def check_squares_in_line(board, position, cursor_shift, color, out)
 end
 
 class Piece
-    # Beskrivning: Returnerar pjäsens icon
-    # Return: String: pjäsens icon
-    # Exempel:
-    #       Pawn.icon => "P"
-    #       Knigth.icon => "Kn"
-    #       Piece.icon => error
-    # Datum: 22/4/2024
-    # Namn: Noah Westerberg
-    def icon
-        return @icon
-    end
-
-    # Beskrivning: Returnerar pjäsens färg/vilken spelare den tillhör
-    # Return: String: pjäsens färg, antingen "white" eller "black"
-    # Exempel:
-    #       Piece.color => "white"
-    #       Piece.color => "black"
-    # Datum: 22/4/2024
-    # Namn: Noah Westerberg
-    def color
-        return @color
-    end
-
-    # Beskrivning: Returnerar pjäsens position/cordinater
-    # Return: Vector2: pjäsens position
-    # Exempel:
-    #       Piece.position => #<struct Vector2 x=0, y=0>
-    #       Piece.position => #<struct Vector2 x=3, y=3>
-    #       Piece.position => #<struct Vector2 x=7, y=5>
-    #       Piece.position => #<struct Vector2 x=nil, y=nil>
-    # Datum: 22/4/2024
-    # Namn: Noah Westerberg
-    def position
-        return @position
-    end
+    attr_reader :color, :position, :icon
 
     # Beskrivning:
     # Argument 1:
