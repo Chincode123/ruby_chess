@@ -222,27 +222,33 @@ class Pawn < Piece
     # Namn: Noah Westerberg
     def find_moves(board)
         positions = []
-        if (@position.y < board.length)
-            check_square = board[@position.y + @direction][@position.x]
+
+        check_position = Vector2.new(@position.x, @position.y + @direction)
+        if check_position.y < board.length && check_position.y >= 0
+            check_square = board[check_position.y][check_position.x]
             if check_square.class == Empty
-                positions.append(check_square.position)
+                positions.append(check_position)
             end
         end
-        if (@position.x > 0)
-            check_square = board[@position.y + @direction][@position.x - 1]
+
+        check_position = Vector2.new(@position.x - 1, @position.y + @direction)
+        if check_position.x >= 0
+            check_square = board[check_position.y][check_position.x]
             check_square.set_targeted(@color)
             if check_square.class != Empty
                 if check_square.color != @color
-                    positions.append(check_square.position)
+                    positions.append(check_position)
                 end
             end
         end
-        if (@position.x < board.length - 1)
-            check_square = board[@position.y + @direction][@position.x + 1]
+
+        check_position = Vector2.new(@position.x + 1, @position.y + @direction)
+        if check_position.x < board.length
+            check_square = board[check_position.y][check_position.x]
             check_square.set_targeted(@color)
             if check_square.class != Empty
                 if check_square.color != @color
-                    positions.append(check_square.position)
+                    positions.append(check_position)
                 end
             end
         end
@@ -251,9 +257,10 @@ class Pawn < Piece
             return positions
         end
 
-        check_square = board[@position.y + (@direction * 2)][@position.x]
+        check_position = Vector2.new(@position.x, @position.y + (@direction * 2))
+        check_square = board[check_position.y][check_position.x]
         if check_square.class == Empty
-            positions.append(check_square.position)
+            positions.append(check_position)
         end
 
         return positions
