@@ -82,12 +82,12 @@ def initialize_board()
     # white pieces
     board[0][0] = Rook.new(Vector2.new(0, 0), "white")
     board[0][7] = Rook.new(Vector2.new(7, 0), "white")
-    board[0][1] = Knight.new(Vector2.new(1, 0), "white")
-    board[0][6] = Knight.new(Vector2.new(6, 0), "white")
-    board[0][2] = Bishop.new(Vector2.new(2, 0), "white")
-    board[0][5] = Bishop.new(Vector2.new(5, 0), "white")
+    # board[0][1] = Knight.new(Vector2.new(1, 0), "white")
+    # board[0][6] = Knight.new(Vector2.new(6, 0), "white")
+    # board[0][2] = Bishop.new(Vector2.new(2, 0), "white")
+    # board[0][5] = Bishop.new(Vector2.new(5, 0), "white")
     board[0][4] = King.new(Vector2.new(4, 0), "white")
-    board[0][3] = Queen.new(Vector2.new(3, 0), "white")
+    # board[0][3] = Queen.new(Vector2.new(3, 0), "white")
     board[1][0] = Pawn.new(Vector2.new(0, 1), "white")
     board[1][1] = Pawn.new(Vector2.new(1, 1), "white")
     board[1][2] = Pawn.new(Vector2.new(2, 1), "white")
@@ -100,12 +100,12 @@ def initialize_board()
     # black pieces
     board[7][0] = Rook.new(Vector2.new(0, 7), "black")
     board[7][7] = Rook.new(Vector2.new(7, 7), "black")
-    board[7][1] = Knight.new(Vector2.new(1, 7), "black")
-    board[7][6] = Knight.new(Vector2.new(6, 7), "black")
-    board[7][2] = Bishop.new(Vector2.new(2, 7), "black")
-    board[7][5] = Bishop.new(Vector2.new(5, 7), "black")
+    # board[7][1] = Knight.new(Vector2.new(1, 7), "black")
+    # board[7][6] = Knight.new(Vector2.new(6, 7), "black")
+    # board[7][2] = Bishop.new(Vector2.new(2, 7), "black")
+    # board[7][5] = Bishop.new(Vector2.new(5, 7), "black")
     board[7][4] = King.new(Vector2.new(4, 7), "black")
-    board[7][3] = Queen.new(Vector2.new(3, 7), "black")
+    # board[7][3] = Queen.new(Vector2.new(3, 7), "black")
     board[6][0] = Pawn.new(Vector2.new(0, 6), "black")
     board[6][1] = Pawn.new(Vector2.new(1, 6), "black")
     board[6][2] = Pawn.new(Vector2.new(2, 6), "black")
@@ -328,8 +328,8 @@ end
 # Beskrivning: Game loop
 # Return: String: Vinnaren
 # Exempel:
-#       game() => "white"
-#       game() => "black"
+#       game() => players[0].name
+#       game() => players[1].name
 #       game() => "draw"
 #       game() => "stalemate"
 # Datum 5/5/2024
@@ -465,4 +465,4 @@ end
 
 
 
-game()
+winner = game()

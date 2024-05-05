@@ -89,12 +89,37 @@ def check_squares_in_line(board, position, cursor_shift, color, out)
     end
 end
 
+# Beskrivning: 
+# Argument 1: Array, spelbrädan
+# Argument 2: Vector2, användarpjäsens position
+# Argument 3: Vector2, hur marökern som sätter in rutorna justeras
+# Return: Vector2: positionen av den första pjäsen på en rad
+# Exempel:
+#       Argument3/cursor_shift = (0, 0) => oändlig loop
+# Datum: 6/5/2024
+# Namn: Noah Westerberg
+def get_first_square_in_line(board, position, cursor_shift)
+    first_square = nil
+    x = position.x + cursor_shift.x
+    y = position.y + cursor_shift.y
+    while x < board.length && y < board.length && x >= 0 && y >= 0
+        check_square = board[y][x]
+        if (check_square.class != Empty)
+            first_square = Vector2.new(x, y)
+            break
+        end
+        x += cursor_shift.x
+        y += cursor_shift.y
+    end
+    return first_square
+end
+
 class Piece
     attr_reader :color, :position, :icon
 
     # Beskrivning:
     # Argument 1:
-    # Return:
+    # Return: Bolean
     # Exempel:
     # Datum: 24/4/2024
     # Namn: Noah Westerberg
@@ -298,7 +323,7 @@ class King < Piece
     # Argument 1: 2D-Array: spelbrädan
     # Return: Vector2[]: tillgängliga positioner
     # Exempel:
-    # Datum: 4/5/2024
+    # Datum: 
     # Namn: Noah Westerberg
     def find_moves(board)
         positions = []
@@ -306,7 +331,6 @@ class King < Piece
         while angle < 2 * Math::PI
             new_position = Vector2.new(@position.x + round_angle(Math.cos(angle)), @position.y + round_angle(Math.sin(angle)))
             angle += Math::PI / 4
-
             check_square(board, new_position, @color, positions)
         end
 
@@ -319,6 +343,33 @@ class King < Piece
             end
         end
 
+        if @has_moved == false
+            i = -1
+            while i <= 1
+                rook_position = get_first_square_in_line(board, @position, Vector2.new(i, 0))
+                if rook_position == nil
+                    i += 2
+                    next
+                end
+                if board[rook_position.y][rook_position.x].class == Rook
+                    if board[rook_position.y][rook_position.x].has_moved == false
+                        targeted = false
+                        j = 0
+                        while j <= 2
+                            if board[@position.y][@position.x + (j * i)].is_targeted(@color)
+                                targeted = true
+                            end
+                            j += 1
+                        end
+                        if targeted == false
+                            positions.append(Vector2.new(@position.x + (2 * i), @position.y))
+                        end
+                    end
+                end
+                i += 2
+            end
+        end
+
         return positions
     end
 
@@ -327,9 +378,26 @@ class King < Piece
     # Argument 2: 2D-Array: Spelbrädan
     # Return: Inget
     # Exempel:
-    # Datum: 
+    # Datum: 6/6/2024
     # Namn: Noah Westerberg
     def move(position, board)
+        if (@position.x - position.x).abs > 1
+            rook_position = Vector2.new
+            if (@position.x - position.x) < 0
+                rook_position = Vector2.new(7, @position.y)
+                p rook_position
+                rook = board[rook_position.y][rook_position.x]
+                p rook
+                rook.move(Vector2.new(position.x - 1, position.y), board)
+            else
+                rook_position = Vector2.new(0, @position.y)
+                p rook_position
+                rook = board[rook_position.y][rook_position.x]
+                p rook
+                rook.move(Vector2.new(position.x + 1, position.y), board)
+            end
+        end
+        
         board[@position.y][@position.x] = Empty.new
         @has_moved = true    
         @position = position
