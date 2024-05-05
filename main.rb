@@ -37,7 +37,10 @@ Player = Struct.new(:name, :color) do
             for piece in row
                 if piece.class != Empty
                     if piece.color == color
-                        points += piece_to_points(piece)
+                        piece_points = piece_to_points(piece)
+                        if piece_points != nil
+                            points += piece_points
+                        end
                     end
                 end
             end
@@ -220,6 +223,45 @@ def input_square()
     return position
 end
 
+# Beskrivning: Lägger till ett "+" om poängen är större än eller lika med 0
+# Argument 1: Integer: poäng
+# Return: String: poäng som sträng
+# Exempel:
+#       player_points_text(0) => "+0"
+#       player_points_text(6) => "+6"
+#       player_points_text(-3) => "-3"
+# Datum 5/5/2024
+# Namn: Noah Westerberg
+def player_points_text(points)
+    if points >= 0
+        return "+#{points}"
+    end
+    return points.to_s
+end
+
+# Beskrivning: Skriver ut spelbrädan och spelarnas information
+# Argument 1: 2D-Array: spelbrädan
+# Argument 2: Bolean: om brädan ska vara omvänd eller inte
+# Argument 3: Array av Vector2: vilka rutor som ska vara markerade 
+# Argument 4: Array: spelarna
+# Datum: 5/5/2024
+# Namn: Noah Westerberg
+def display_game(board, fliped, highlighted_squares, players)
+    top_text = ""
+    bottom_text = ""
+    if fliped
+        top_text = "#{players[0].name} (#{player_points_text(players[0].points(board) - players[1].points(board))}) #{players[0].color.upcase}"
+        bottom_text = "#{players[1].name} (#{player_points_text(players[1].points(board) - players[0].points(board))}) #{players[1].color.upcase}"
+    else
+        top_text = "#{players[1].name} (#{player_points_text(players[1].points(board) - players[0].points(board))}) #{players[1].color.upcase}"
+        bottom_text = "#{players[0].name} (#{player_points_text(players[0].points(board) - players[1].points(board))}) #{players[0].color.upcase}"
+    end
+    
+    puts top_text
+    draw_board(board, fliped, highlighted_squares)
+    puts bottom_text
+end
+
 # Beskrivning: Game loop
 # Return: String: Vinnaren
 # Exempel:
@@ -269,11 +311,11 @@ def game()
                 square.find_moves(board)
             end
         end
-
-        draw_board(board, is_fliped, [])
-
+        
         has_moved = false
         while !has_moved
+            display_game(board, is_fliped, [], players)
+            puts "#{current_player.color.upcase} to move"
             puts "Enter the square you want to select"
             selected_square = Empty.new
             avalible_positions = []
@@ -304,7 +346,7 @@ def game()
                 break
             end
             
-            draw_board(board, is_fliped, avalible_positions)
+            display_game(board, is_fliped, avalible_positions, players)
 
             new_move = false
             puts "Select the square you want your piece to move to\nPress ENTER to select another piece to move"
