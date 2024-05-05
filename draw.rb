@@ -70,7 +70,7 @@ def draw_board(board, fliped, highlighted_squares)
                 square_text += " "
             end
             
-            if board[i][j].color == nil
+            if board[i][j].class == Empty || board[i][j].class == En_passant_square
                 square_text = Rainbow(square_text).hide
             elsif board[i][j].color == "white"
                 square_text = Rainbow(square_text).lightblue
@@ -85,9 +85,12 @@ def draw_board(board, fliped, highlighted_squares)
             end
 
             if highlighted_squares.include?(Vector2.new(j, i))
-                if board[i][j].class == Empty
+                if board[i][j].class == Empty || board[i][j].class == En_passant_square
                     square_text = position_to_square_name(Vector2.new(j, i))
                     square_text = Rainbow(square_text).bg(:blue).bisque
+                    if board[i][j].class == En_passant_square
+                        square_text = Rainbow(square_text).red
+                    end
                 else
                     square_text = Rainbow(square_text).bg(:blue).red
                 end

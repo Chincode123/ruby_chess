@@ -131,7 +131,7 @@ class Piece
         @targeted_by_black = false
     end
 
-    # Beskrivning: Muterar pjäsens position. Flytar pjäsen på brädan och lämnar indexet den var på som ett blankt object (inplace). Om det är viktigt för pjäsen så sparas det att den har flytat på sig
+    # Beskrivning: Flyttar pjäsens position. Flytar pjäsen på brädan och lämnar indexet den var på som ett blankt object (inplace). Om det är viktigt för pjäsen så sparas det att den har flytat på sig
     # Argument 1: Vector2: Positionen som pjäsen ska flyta sig till.
     # Argument 2: 2D-Array: Spelbrädan
     # Return: Inget
@@ -141,7 +141,7 @@ class Piece
     def move(position, board)
         board[@position.y][@position.x] = Empty.new
 
-        if (self.class == Pawn || self.class == King || self.class == Rook)
+        if self.class == Rook
             @has_moved = true
         end
             
@@ -157,6 +157,28 @@ class Empty < Piece
         @icon = "#"
         @targeted_by_white = false
         @targeted_by_black = false
+    end
+end
+
+class En_passant_square < Piece
+    def initialize(position, color)
+        @icon = "#"
+        @targeted_by_white = false
+        @targeted_by_black = false
+        @position = position
+        @color = color
+        @round = 0
+    end
+
+    # Beskrivning: ökar hur många rundor som en passant rutan har funnits. Den tas bort efter att den har varit aktiv i en runda
+    # Argument 1: 2D-Array: spelbrädan
+    # Datum 5/5/2024
+    # Namn: Noah Westerberg
+    def increment_round(board)
+        @round += 1
+        if @round >= 2
+            board[position.y][position.x] = Empty.new
+        end
     end
 end
 
@@ -231,6 +253,31 @@ class Pawn < Piece
 
         return positions
     end
+
+    # Beskrivning: Flyttar pjäsens position. Flytar pjäsen på brädan och lämnar indexet den var på som ett blankt object (inplace). Om det är viktigt för pjäsen så sparas det att den har flytat på sig
+    # Argument 1: Vector2: Positionen som pjäsen ska flyta sig till.
+    # Argument 2: 2D-Array: Spelbrädan
+    # Return: Inget
+    # Exempel:
+    # Datum: 6/5/2024
+    # Namn: Noah Westerberg
+    def move(position, board)
+        if (position.y - @position.y).abs > 1
+            en_passant_position = Vector2.new(@position.x, @position.y + ((position.y - @position.y) / 2))
+            board[en_passant_position.y][en_passant_position.x] = En_passant_square.new(en_passant_position, @color)
+        end
+        if board[position.y][position.x].class == En_passant_square
+            pawn_position = Vector2.new(@position.x + (position.x - @position.x), position.y + ((@position.y - position.y)))
+            p pawn_position
+            board[pawn_position.y][pawn_position.x] = Empty.new
+        end
+
+        board[@position.y][@position.x] = Empty.new
+        @position = position
+        @has_moved = true
+        serialized_piece = Marshal.dump(self)
+        board[position.y][position.x] = Marshal.load(serialized_piece)
+    end
 end
 
 class King < Piece
@@ -273,6 +320,21 @@ class King < Piece
         end
 
         return positions
+    end
+
+    # Beskrivning: Flyttar pjäsens position. Flytar pjäsen på brädan och lämnar indexet den var på som ett blankt object (inplace). Om det är viktigt för pjäsen så sparas det att den har flytat på sig
+    # Argument 1: Vector2: Positionen som pjäsen ska flyta sig till.
+    # Argument 2: 2D-Array: Spelbrädan
+    # Return: Inget
+    # Exempel:
+    # Datum: 
+    # Namn: Noah Westerberg
+    def move(position, board)
+        board[@position.y][@position.x] = Empty.new
+        @has_moved = true    
+        @position = position
+        serialized_piece = Marshal.dump(self)
+        board[position.y][position.x] = Marshal.load(serialized_piece)
     end
 end
 

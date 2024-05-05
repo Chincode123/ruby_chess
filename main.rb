@@ -98,7 +98,7 @@ def initialize_board()
     board[1][7] = Pawn.new(Vector2.new(7, 1), "white")
 
     # black pieces
-    # board[7][0] = Rook.new(Vector2.new(0, 7), "black")
+    board[7][0] = Rook.new(Vector2.new(0, 7), "black")
     board[7][7] = Rook.new(Vector2.new(7, 7), "black")
     board[7][1] = Knight.new(Vector2.new(1, 7), "black")
     board[7][6] = Knight.new(Vector2.new(6, 7), "black")
@@ -116,7 +116,8 @@ def initialize_board()
     board[6][7] = Pawn.new(Vector2.new(7, 6), "black")
 
     # temp
-    board[5][1] = Pawn.new(Vector2.new(1, 5), "white")
+    board[4][1] = Pawn.new(Vector2.new(1, 4), "white")
+    board[3][3] = Pawn.new(Vector2.new(3, 3), "black")
 
 
     return board
@@ -368,7 +369,10 @@ def game()
 
         for row in board
             for square in row
-                if (square.class == Empty)
+                if square.class == Empty
+                    next
+                elsif square.class == En_passant_square
+                    square.increment_round(board)
                     next
                 end
                 square.find_moves(board)
