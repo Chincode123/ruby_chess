@@ -162,24 +162,72 @@ def square_to_coordinets(square)
     return Vector2.new(x, y)
 end
 
-# Beskrivning:
-# Return: Vector2: cordinaterna för rutan som är vald
+# Beskrivning: Input-function som kollar efter oavgjort
+# Argument 1: String: output sträng där inputen går till om det inte blir oavgjort
+# Return: Bolean: true om det är oavgjort
 # Exempel:
-# Datum: 3/5/2024
+#       get_input(), användaren skriver "a1", => false
+#       get_input(), användaren skriver "f3", => false
+#       get_input(), användaren skriver "draw" => true
+#       get_input(), användaren skriver "" => false
+# Datum 5/5/2024
+# Namn: Noah Westerberg
+def get_input(out)
+    input = gets.chomp
+    if input.downcase == "draw"
+        puts "To confirm the DRAW type \"draw\" again"
+        input = gets.chomp
+        if input.downcase == "draw"
+            return true
+        end
+        puts "DRAW faild"
+    end
+    i = 0
+    while i < out.length
+        out.slice!(i)
+    end
+    out.concat(input)
+    return false
+end
+
+# Beskrivning: Input function för att få kordinaterna för en ruta. Functionen har validering så att det bara går att skriva in giltiga inputs.
+# Return: 
+#       Vector2: cordinaterna för rutan som är vald
+#       String: "draw" för att aktivera att det blir oavgjort
+#       nil: Inget anges
+# Exempel:
+#       input_square(), användaren skriver "a1", => square_to_cordinets(a1) => <struct Vector2 x=0, y=0>
+#       input_square(), användaren skriver "f3", => square_to_cordinets(f3) => <struct Vector2 x=5, y=4>
+#       input_square(), användaren skriver "draw" => "draw"
+#       input_square(), användaren skriver "" => nil
+# Datum: 5/5/2024
 # Namn: Noah Westerberg
 def input_square()
-    input = gets.chomp
-    if (input.length < 2)
+    input = ""
+    if get_input(input)
+        return "draw"
+    elsif input == ""
+        return nil
+    elsif input.length != 2
+        puts "Invalid input: Your input:\"#{input}\" is to short\nThe input needs to be at least two characters long"
         return input_square()
     end
     position = square_to_coordinets(input)
-    if (position == nil)
+    if position == nil
+        puts "Invalid input: #{input} is not a square on the board"
         return input_square()
     end
     return position
 end
 
-
+# Beskrivning: Game loop
+# Return: String: Vinnaren
+# Exempel:
+#       game() => white
+#       game() => black
+#       game() => draw
+# Datum 5/5/2024
+# Namn: Noah Westerberg
 def game()
     players = initialize_players()
     board = initialize_board()
@@ -187,19 +235,20 @@ def game()
     for player in players
         name = player.name
         enterd_name = "no"
-        while enterd_name == "no"
+        while enterd_name.downcase == "no"
             puts "Player #{player.color.upcase}, what is your name?"
             input_name = gets.chomp
             if input_name != ""
                 name = input_name
             end
-            puts "Are you sure your name is #{name}? Type \"no\" to re-enter your name"
+            puts "Are you sure your name is \"#{name}\"?\nType \"no\" to re-enter your name"
             enterd_name = gets.chomp
         end
         player.name = name
-        print "\n" * 20
+        print "\n" * 0
     end
     
+    winner = "draw"
     turn = 0
     is_fliped = false
 
@@ -223,25 +272,66 @@ def game()
 
         draw_board(board, is_fliped, [])
 
-        selected_square = Empty.new
-        avalible_positions = []
-        while avalible_positions.length == 0
+        has_moved = false
+        while !has_moved
+            puts "Enter the square you want to select"
             selected_square = Empty.new
-            while selected_square.color != current_player.color
-                square_coordinets = input_square()
-                selected_square = board[square_coordinets.y][square_coordinets.x]
+            avalible_positions = []
+            while avalible_positions.length == 0
+                selected_square = Empty.new
+                while selected_square.color != current_player.color
+                    if selected_square.class != Empty
+                        puts "The piece you selected is #{selected_square.color.upcase}\nSelect a piece that has your color, #{current_player.color.upcase}"
+                    end
+                    square_coordinets = input_square()
+                    if square_coordinets == nil
+                        next
+                    elsif square_coordinets == "draw"
+                        continue_playing = false
+                        break
+                    end
+                    selected_square = board[square_coordinets.y][square_coordinets.x]
+                    if selected_square.class == Empty
+                        puts "The square you selected is Empty. Select another square"
+                    end
+                end
+                if continue_playing == false
+                    break
+                end
+                avalible_positions = selected_square.find_moves(board)
             end
-            avalible_positions = selected_square.find_moves(board)
+            if continue_playing == false
+                break
+            end
+            
+            draw_board(board, is_fliped, avalible_positions)
+
+            new_move = false
+            puts "Select the square you want your piece to move to\nPress ENTER to select another piece to move"
+            move_coordinets = Vector2.new
+            while !avalible_positions.include?(move_coordinets)
+                move_coordinets = input_square()
+                if move_coordinets == nil
+                    puts "Move canceled"
+                    new_move = true
+                    break
+                elsif move_coordinets == "draw"
+                    continue_playing = false
+                    break
+                end
+            end
+            if new_move == true
+                next
+            elsif continue_playing == false
+                break
+            end
+            
+            selected_square.move(move_coordinets, board)
+            has_moved = true
         end
-
-        draw_board(board, is_fliped, avalible_positions)
-
-        move_coordinets = Vector2.new
-        while !avalible_positions.include?(move_coordinets)
-            move_coordinets = input_square()
+        if continue_playing == false
+            break
         end
-
-        selected_square.move(move_coordinets, board)
 
         turn += 1
         is_fliped = !is_fliped
@@ -252,8 +342,9 @@ def game()
             end
         end
     end
-end
 
+    return winner
+end
 
 
 

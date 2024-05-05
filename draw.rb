@@ -86,14 +86,6 @@ def draw_board(board, fliped, highlighted_squares)
                     square_text = Rainbow(square_text).bg(:blue).red
                 end
             end
-
-            if board[i][j].is_targeted("white") && board[i][j].is_targeted("black")
-                square_text = Rainbow(square_text).bg(:yellow)
-            elsif board[i][j].is_targeted("white")
-                square_text = Rainbow(square_text).bg(:green)
-            elsif board[i][j].is_targeted("black")
-                square_text = Rainbow(square_text).bg(:purple)
-            end
                 
             print square_text
             

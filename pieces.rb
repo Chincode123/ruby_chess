@@ -120,11 +120,11 @@ class Piece
         end
     end
 
-    # Beskrivning:
-    # Argument 1:
-    # Return:
+    # Beskrivning: Resettar targetet fälten
+    # Return: Inget
     # Exempel:
-    # Datum: 24/4/2024
+    #       Piece.remove_targeted(): <Piece @targeted_by_white=false, @targeted_by_black=false, ...>
+    # Datum: 5/5/2024
     # Namn: Noah Westerberg
     def remove_targeted()
         @targeted_by_white = false
@@ -134,7 +134,7 @@ class Piece
     # Beskrivning: Muterar pjäsens position. Flytar pjäsen på brädan och lämnar indexet den var på som ett blankt object (inplace). Om det är viktigt för pjäsen så sparas det att den har flytat på sig
     # Argument 1: Vector2: Positionen som pjäsen ska flyta sig till.
     # Argument 2: 2D-Array: Spelbrädan
-    # Return: void
+    # Return: Inget
     # Exempel:
     # Datum: 4/5/2024
     # Namn: Noah Westerberg
