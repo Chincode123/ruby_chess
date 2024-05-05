@@ -67,7 +67,7 @@ def draw_board(board, fliped, highlighted_squares)
             if board[i][j].color == nil
                 square_text = Rainbow(square_text).hide
             elsif board[i][j].color == "white"
-                square_text = Rainbow(square_text).bisque
+                square_text = Rainbow(square_text).lightblue
             else
                 square_text = Rainbow(square_text).black
             end
@@ -78,15 +78,23 @@ def draw_board(board, fliped, highlighted_squares)
                 square_text = Rainbow(square_text).bg(:brown)
             end
 
-            if (highlighted_squares.include?(Vector2.new(j, i)))
-                if (board[i][j].class == Empty)
+            if highlighted_squares.include?(Vector2.new(j, i))
+                if board[i][j].class == Empty
                     square_text = position_to_square_name(Vector2.new(j, i))
-                    square_text = Rainbow(square_text).bg(:blue).lightblue
+                    square_text = Rainbow(square_text).bg(:blue).bisque
                 else
                     square_text = Rainbow(square_text).bg(:blue).red
                 end
             end
 
+            if board[i][j].is_targeted("white") && board[i][j].is_targeted("black")
+                square_text = Rainbow(square_text).bg(:yellow)
+            elsif board[i][j].is_targeted("white")
+                square_text = Rainbow(square_text).bg(:green)
+            elsif board[i][j].is_targeted("black")
+                square_text = Rainbow(square_text).bg(:purple)
+            end
+                
             print square_text
             
             if fliped

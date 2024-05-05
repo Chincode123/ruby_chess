@@ -126,12 +126,9 @@ class Piece
     # Exempel:
     # Datum: 24/4/2024
     # Namn: Noah Westerberg
-    def remove_target(color)
-        if color == "white"
-            @targeted_by_white = false
-        else
-            @targeted_by_black = false
-        end
+    def remove_targeted()
+        @targeted_by_white = false
+        @targeted_by_black = false
     end
 
     # Beskrivning: Muterar pjäsens position. Flytar pjäsen på brädan och lämnar indexet den var på som ett blankt object (inplace). Om det är viktigt för pjäsen så sparas det att den har flytat på sig
@@ -266,9 +263,12 @@ class King < Piece
             check_square(board, new_position, @color, positions)
         end
 
-        for position in positions
-            if (board[position.y][position.x].is_targeted(@color))
-                positions.delete(position)
+        i = 0
+        while i < positions.length
+            if board[positions[i].y][positions[i].x].is_targeted(@color)
+                positions.delete_at(i)
+            else
+                i += 1
             end
         end
 

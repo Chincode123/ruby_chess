@@ -245,6 +245,12 @@ def game()
 
         turn += 1
         is_fliped = !is_fliped
+
+        for row in board
+            for square in row
+                square.remove_targeted()
+            end
+        end
     end
 end
 
