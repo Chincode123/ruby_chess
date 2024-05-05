@@ -98,7 +98,7 @@ def initialize_board()
     board[1][7] = Pawn.new(Vector2.new(7, 1), "white")
 
     # black pieces
-    board[7][0] = Rook.new(Vector2.new(0, 7), "black")
+    # board[7][0] = Rook.new(Vector2.new(0, 7), "black")
     board[7][7] = Rook.new(Vector2.new(7, 7), "black")
     board[7][1] = Knight.new(Vector2.new(1, 7), "black")
     board[7][6] = Knight.new(Vector2.new(6, 7), "black")
@@ -114,6 +114,10 @@ def initialize_board()
     board[6][5] = Pawn.new(Vector2.new(5, 6), "black")
     board[6][6] = Pawn.new(Vector2.new(6, 6), "black")
     board[6][7] = Pawn.new(Vector2.new(7, 6), "black")
+
+    # temp
+    board[5][1] = Pawn.new(Vector2.new(1, 5), "white")
+
 
     return board
 end
@@ -163,6 +167,36 @@ def square_to_coordinets(square)
     end
 
     return Vector2.new(x, y)
+end
+
+# Beskrivning: Omvandlar kordinater till rutbetäckning
+# Argument 1: Vector2: Rutans position
+# Return: String: Rutans betäckning
+# Exempel:
+#       
+# Datum: 5/5/2024
+# Namn: Noah Westerberg
+def coordinets_to_square(coordinets)
+    square = ""
+    if coordinets.x == 0
+        square.concat("a")
+    elsif coordinets.x == 1
+        square.concat("b")
+    elsif coordinets.x == 2
+        square.concat("c")
+    elsif coordinets.x == 3
+        square.concat("d")
+    elsif coordinets.x == 4
+        square.concat("e")
+    elsif coordinets.x == 5
+        square.concat("f")
+    elsif coordinets.x == 6
+        square.concat("g")
+    elsif coordinets.x == 7
+        square.concat("h")
+    end
+    square.concat("#{coordinets.y + 1}")
+    return square
 end
 
 # Beskrivning: Input-function som kollar efter oavgjort
@@ -262,12 +296,41 @@ def display_game(board, fliped, highlighted_squares, players)
     puts bottom_text
 end
 
+# Beskrivning: Promoverar en bonde
+# Argument 1: 2D-Array: spelbrädan
+# Argument 2: Vector2: bondens position
+# Datum: 5/5/2024
+# Namn: Noah Westerberg
+def promote_pawn(board, position)
+    puts "Your pawn at #{coordinets_to_square(position)} can promote\nSelect what you want your pawn to become"
+    promotion_piece = nil
+    while promotion_piece == nil
+        puts "Options: Queen, Knight, Rook, Bishop"
+        input = gets.chomp
+        if input.downcase == "queen"
+            board[position.y][position.x] = Queen.new(position, board[position.y][position.x].color)
+            break
+        elsif input.downcase == "knight"
+            board[position.y][position.x] = Knight.new(position, board[position.y][position.x].color)
+            break
+        elsif input.downcase == "rook"
+            board[position.y][position.x] = Rook.new(position, board[position.y][position.x].color)
+            break
+        elsif input.downcase == "bishop"
+            board[position.y][position.x] = Bishop.new(position, board[position.y][position.x].color)
+            break
+        end
+        puts "Invalid Option!\n#{input} is an invalid option\nPlease Enter one of the following options"
+    end
+end
+
 # Beskrivning: Game loop
 # Return: String: Vinnaren
 # Exempel:
-#       game() => white
-#       game() => black
-#       game() => draw
+#       game() => "white"
+#       game() => "black"
+#       game() => "draw"
+#       game() => "stalemate"
 # Datum 5/5/2024
 # Namn: Noah Westerberg
 def game()
@@ -290,7 +353,7 @@ def game()
         print "\n" * 0
     end
     
-    winner = "draw"
+    winner = ""
     turn = 0
     is_fliped = false
 
@@ -329,6 +392,7 @@ def game()
                     if square_coordinets == nil
                         next
                     elsif square_coordinets == "draw"
+                        winner = "draw"
                         continue_playing = false
                         break
                     end
@@ -358,6 +422,7 @@ def game()
                     new_move = true
                     break
                 elsif move_coordinets == "draw"
+                    winner = "draw"
                     continue_playing = false
                     break
                 end
@@ -370,6 +435,12 @@ def game()
             
             selected_square.move(move_coordinets, board)
             has_moved = true
+
+            if move_coordinets.y == 0 || move_coordinets.y == 7
+                if board[move_coordinets.y][move_coordinets.x].class == Pawn
+                    promote_pawn(board, move_coordinets)
+                end
+            end
         end
         if continue_playing == false
             break

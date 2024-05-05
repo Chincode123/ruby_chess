@@ -41,6 +41,12 @@ def position_to_square_name(position)
     end
 end
 
+# Beskrivning: Skriver ut spelbrädan
+# Argument 1: 2D-Array: spelbrädan
+# Argument 2: Boolean: om brädan ska vara omvänd
+# Argument 3: Array: positioner på rutor som ska vara markerade
+# Datum: 5/5/2024
+# Namn: Noah Westerberg
 def draw_board(board, fliped, highlighted_squares)
     if fliped
         print "  H|G|F|E|D|C|B|A\n"
@@ -73,9 +79,9 @@ def draw_board(board, fliped, highlighted_squares)
             end
 
             if (j + i) % 2 == 0
-                square_text = Rainbow(square_text).bg(:burlywood)
-            else
                 square_text = Rainbow(square_text).bg(:brown)
+            else
+                square_text = Rainbow(square_text).bg(:burlywood)
             end
 
             if highlighted_squares.include?(Vector2.new(j, i))
