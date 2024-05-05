@@ -186,18 +186,18 @@ def game()
 
     for player in players
         name = player.name
-        continue = ""
-        while continue != "YES"
-            puts "Player: #{player.color}, what is your name?"
+        enterd_name = "no"
+        while enterd_name == "no"
+            puts "Player #{player.color.upcase}, what is your name?"
             input_name = gets.chomp
             if input_name != ""
                 name = input_name
             end
-            puts "Are you sure your name is #{name}? Type YES to confirm"
-            continue = gets.chomp
+            puts "Are you sure your name is #{name}? Type \"no\" to re-enter your name"
+            enterd_name = gets.chomp
         end
         player.name = name
-        print "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+        print "\n" * 20
     end
     
     turn = 0
@@ -227,7 +227,6 @@ def game()
         avalible_positions = []
         while avalible_positions.length == 0
             selected_square = Empty.new
-            p current_player
             while selected_square.color != current_player.color
                 square_coordinets = input_square()
                 selected_square = board[square_coordinets.y][square_coordinets.x]
