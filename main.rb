@@ -35,7 +35,7 @@ Player = Struct.new(:name, :color) do
         points = 0
         for row in board
             for piece in row
-                if piece.class != Empty
+                if piece.class != Empty && piece.class != En_passant_square
                     if piece.color == color
                         piece_points = piece_to_points(piece)
                         if piece_points != nil
@@ -77,17 +77,20 @@ def initialize_board()
         [Empty.new, Empty.new, Empty.new, Empty.new, Empty.new, Empty.new, Empty.new, Empty.new],        
         [Empty.new, Empty.new, Empty.new, Empty.new, Empty.new, Empty.new, Empty.new, Empty.new],        
         [Empty.new, Empty.new, Empty.new, Empty.new, Empty.new, Empty.new, Empty.new, Empty.new]
-        ]
+    ]
 
+
+    
+    # Normal setup:
     # white pieces
     board[0][0] = Rook.new(Vector2.new(0, 0), "white")
     board[0][7] = Rook.new(Vector2.new(7, 0), "white")
-    # board[0][1] = Knight.new(Vector2.new(1, 0), "white")
-    # board[0][6] = Knight.new(Vector2.new(6, 0), "white")
-    # board[0][2] = Bishop.new(Vector2.new(2, 0), "white")
-    # board[0][5] = Bishop.new(Vector2.new(5, 0), "white")
+    board[0][1] = Knight.new(Vector2.new(1, 0), "white")
+    board[0][6] = Knight.new(Vector2.new(6, 0), "white")
+    board[0][2] = Bishop.new(Vector2.new(2, 0), "white")
+    board[0][5] = Bishop.new(Vector2.new(5, 0), "white")
     board[0][4] = King.new(Vector2.new(4, 0), "white")
-    # board[0][3] = Queen.new(Vector2.new(3, 0), "white")
+    board[0][3] = Queen.new(Vector2.new(3, 0), "white")
     board[1][0] = Pawn.new(Vector2.new(0, 1), "white")
     board[1][1] = Pawn.new(Vector2.new(1, 1), "white")
     board[1][2] = Pawn.new(Vector2.new(2, 1), "white")
@@ -96,16 +99,15 @@ def initialize_board()
     board[1][5] = Pawn.new(Vector2.new(5, 1), "white")
     board[1][6] = Pawn.new(Vector2.new(6, 1), "white")
     board[1][7] = Pawn.new(Vector2.new(7, 1), "white")
-
     # black pieces
     board[7][0] = Rook.new(Vector2.new(0, 7), "black")
     board[7][7] = Rook.new(Vector2.new(7, 7), "black")
-    # board[7][1] = Knight.new(Vector2.new(1, 7), "black")
-    # board[7][6] = Knight.new(Vector2.new(6, 7), "black")
-    # board[7][2] = Bishop.new(Vector2.new(2, 7), "black")
-    # board[7][5] = Bishop.new(Vector2.new(5, 7), "black")
+    board[7][1] = Knight.new(Vector2.new(1, 7), "black")
+    board[7][6] = Knight.new(Vector2.new(6, 7), "black")
+    board[7][2] = Bishop.new(Vector2.new(2, 7), "black")
+    board[7][5] = Bishop.new(Vector2.new(5, 7), "black")
+    board[7][3] = Queen.new(Vector2.new(3, 7), "black")
     board[7][4] = King.new(Vector2.new(4, 7), "black")
-    # board[7][3] = Queen.new(Vector2.new(3, 7), "black")
     board[6][0] = Pawn.new(Vector2.new(0, 6), "black")
     board[6][1] = Pawn.new(Vector2.new(1, 6), "black")
     board[6][2] = Pawn.new(Vector2.new(2, 6), "black")
@@ -115,10 +117,50 @@ def initialize_board()
     board[6][6] = Pawn.new(Vector2.new(6, 6), "black")
     board[6][7] = Pawn.new(Vector2.new(7, 6), "black")
 
-    # temp
-    board[4][1] = Pawn.new(Vector2.new(1, 4), "white")
-    board[3][3] = Pawn.new(Vector2.new(3, 3), "black")
+    # Showcase:
+    
+    # # Castling:
+    # board[0][4] = King.new(Vector2.new(4, 0), "white")
+    # board[7][4] = King.new(Vector2.new(4, 7), "black")
+    # board[7][0] = Rook.new(Vector2.new(0, 7), "black")
+    # board[7][7] = Rook.new(Vector2.new(7, 7), "black")
+    # board[0][0] = Rook.new(Vector2.new(0, 0), "white")
+    # board[0][7] = Rook.new(Vector2.new(7, 0), "white")
 
+    # # En passant:
+    # board[0][4] = King.new(Vector2.new(4, 0), "white")
+    # board[7][4] = King.new(Vector2.new(4, 7), "black")
+    # board[1][3] = Pawn.new(Vector2.new(3, 1), "white")
+    # board[3][4] = Pawn.new(Vector2.new(4, 3), "black")
+
+    # # Stalemate:
+    # board[0][4] = King.new(Vector2.new(4, 0), "white")
+    # board[7][0] = King.new(Vector2.new(0, 7), "black")
+    # board[1][1] = Rook.new(Vector2.new(1, 1), "white")
+    # board[1][2] = Rook.new(Vector2.new(2, 1), "white")
+
+    # # Promotion:
+    # board[0][4] = King.new(Vector2.new(4, 0), "white")
+    # board[7][4] = King.new(Vector2.new(4, 7), "black")
+    # board[5][7] = Pawn.new(Vector2.new(7, 5), "white")
+
+    # # check:
+    # board[0][0] = King.new(Vector2.new(0, 0), "white")
+    # board[5][4] = King.new(Vector2.new(4, 5), "black")
+    # board[5][3] = Pawn.new(Vector2.new(3, 5), "black")
+    # board[5][5] = Pawn.new(Vector2.new(5, 5), "black")
+    # board[6][4] = Pawn.new(Vector2.new(4, 6), "black")
+    # board[6][5] = Pawn.new(Vector2.new(5, 6), "black")
+    # board[4][3] = Pawn.new(Vector2.new(3, 4), "black")
+    # board[4][4] = Pawn.new(Vector2.new(4, 4), "black")
+    # board[7][1] = Knight.new(Vector2.new(1, 7), "black")
+    # board[2][5] = Bishop.new(Vector2.new(5, 2), "white")
+
+    # # checkmate:
+    # board[0][4] = King.new(Vector2.new(4, 0), "white")
+    # board[7][0] = King.new(Vector2.new(0, 7), "black")
+    # board[1][1] = Rook.new(Vector2.new(1, 1), "white")
+    # board[6][5] = Queen.new(Vector2.new(5, 6), "white")
 
     return board
 end
@@ -247,7 +289,7 @@ def input_square()
     elsif input == ""
         return nil
     elsif input.length != 2
-        puts "Invalid input: Your input:\"#{input}\" is to short\nThe input needs to be at least two characters long"
+        puts "Invalid input: Your input:\"#{input}\" is not the correct length\nThe input needs to be two characters long"
         return input_square()
     end
     position = square_to_coordinets(input)
@@ -303,7 +345,7 @@ end
 # Datum: 5/5/2024
 # Namn: Noah Westerberg
 def promote_pawn(board, position)
-    puts "Your pawn at #{coordinets_to_square(position)} can promote\nSelect what you want your pawn to become"
+    puts "Your pawn at #{coordinets_to_square(position)} can promote!\nSelect which piece you want your pawn to turn into"
     promotion_piece = nil
     while promotion_piece == nil
         puts "Options: Queen, Knight, Rook, Bishop"
@@ -325,14 +367,48 @@ def promote_pawn(board, position)
     end
 end
 
-# Beskrivning: Game loop
+# Beskrivning: kopierar en spelbräda och flyttar en pjäs på den
+# Argument 1: 2D-Array: spelbrädan
+# Argument 2: Vector2: positionen av pjäsen som ska flyttas
+# Argument 3: Vector2: positionen som pjäsen ska flyttas till
+# Return 2D-Array: kopian av brädan
+# Datum 6/5/2024
+# Namn: Noah Westerberg
+def move_on_board(board, piece_position, move_position)
+    new_board = Marshal.load(Marshal.dump(board))
+    new_board[piece_position.y][piece_position.x].move(move_position, new_board)
+    return new_board
+end
+
+# Beskrivning: undersöker om en kung är attackerad
+# Argument 1: 2D-Array: spelbrädan
+# Argument 2: String: färgen på kungen som ska undersökas
+# Return:
+#       Bolean: true: om kungen är attackerad, annars: false
+#       nil: det finns ingen kung av den inmatade färgen på brädan
+# Datum: 6/5/2024
+# Namn: Noah Westerberg
+def is_king_attacked(board, color)
+    for row in board
+        for square in row
+            if square.class == King
+                if square.color == color
+                    return square.is_targeted(board, square.position, color)
+                end
+            end
+        end
+    end
+    return nil
+end
+
+# Beskrivning: Game-loop
 # Return: String: Vinnaren
 # Exempel:
 #       game() => players[0].name
 #       game() => players[1].name
 #       game() => "draw"
 #       game() => "stalemate"
-# Datum 5/5/2024
+# Datum 6/5/2024
 # Namn: Noah Westerberg
 def game()
     players = initialize_players()
@@ -358,39 +434,63 @@ def game()
     turn = 0
     is_fliped = false
 
+    puts "Game Start!\n#{players[0].name} vs #{players[1].name}\nEnter \"draw\" at any time to end the game in a draw"
     continue_playing = true
     while continue_playing
-        current_player = Player.new
+        current_player = 0
         if turn % 2 == 0
-            current_player = players[0]
+            current_player = 0
         else
-            current_player = players[1]
+            current_player = 1
         end
 
+        all_avalible_positions = []
         for row in board
             for square in row
-                if square.class == Empty
+                if square.class == Empty 
                     next
                 elsif square.class == En_passant_square
                     square.increment_round(board)
-                    next
+                else
+                    avalible_positions = []
+                    if square.color == players[current_player].color
+                        avalible_positions.concat(square.find_moves(board))
+                    end
+                    i = 0
+                    while i < avalible_positions.length
+                        if is_king_attacked(move_on_board(board, square.position, avalible_positions[i]), players[current_player].color)
+                            avalible_positions.delete_at(i)
+                        else
+                            i += 1
+                        end
+                    end
                 end
-                square.find_moves(board)
+                all_avalible_positions.concat(avalible_positions)
             end
         end
-        
+        if all_avalible_positions.length == 0
+            if is_king_attacked(board, players[current_player].color)
+                winner = players[1 - current_player].name
+            else
+                winner = "stalemate"
+            end
+            display_game(board, !is_fliped, [], players)
+            continue_playing = false
+            break
+        end
+
         has_moved = false
         while !has_moved
             display_game(board, is_fliped, [], players)
-            puts "#{current_player.color.upcase} to move"
+            puts "#{players[current_player].color.upcase} to move"
             puts "Enter the square you want to select"
             selected_square = Empty.new
             avalible_positions = []
             while avalible_positions.length == 0
                 selected_square = Empty.new
-                while selected_square.color != current_player.color
-                    if selected_square.class != Empty
-                        puts "The piece you selected is #{selected_square.color.upcase}\nSelect a piece that has your color, #{current_player.color.upcase}"
+                while selected_square.color != players[current_player].color
+                    if selected_square.class != Empty && selected_square.class != En_passant_square
+                        puts "The piece you selected is #{selected_square.color.upcase}\nSelect a piece that has your color, #{players[current_player].color.upcase}"
                     end
                     square_coordinets = input_square()
                     if square_coordinets == nil
@@ -401,7 +501,7 @@ def game()
                         break
                     end
                     selected_square = board[square_coordinets.y][square_coordinets.x]
-                    if selected_square.class == Empty
+                    if selected_square.class == Empty || selected_square.class == En_passant_square
                         puts "The square you selected is Empty. Select another square"
                     end
                 end
@@ -418,8 +518,11 @@ def game()
 
             new_move = false
             puts "Select the square you want your piece to move to\nPress ENTER to select another piece to move"
-            move_coordinets = Vector2.new
+            move_coordinets = nil
             while !avalible_positions.include?(move_coordinets)
+                if move_coordinets != nil
+                    puts "\"#{position_to_square_name(move_coordinets)}\" is not an avalible position"
+                end
                 move_coordinets = input_square()
                 if move_coordinets == nil
                     puts "Move canceled"
@@ -436,14 +539,18 @@ def game()
             elsif continue_playing == false
                 break
             end
-            
-            selected_square.move(move_coordinets, board)
-            has_moved = true
-
-            if move_coordinets.y == 0 || move_coordinets.y == 7
-                if board[move_coordinets.y][move_coordinets.x].class == Pawn
-                    promote_pawn(board, move_coordinets)
+          
+            new_board = move_on_board(board, selected_square.position, move_coordinets)
+            if !is_king_attacked(new_board, players[current_player].color)
+                board = Marshal.load(Marshal.dump(new_board))
+                has_moved = true
+                if move_coordinets.y == 0 || move_coordinets.y == 7
+                    if board[move_coordinets.y][move_coordinets.x].class == Pawn
+                        promote_pawn(board, move_coordinets)
+                    end
                 end
+            else
+                puts "Illegal move: You cannot leave your King open for attack"
             end
         end
         if continue_playing == false
@@ -452,17 +559,17 @@ def game()
 
         turn += 1
         is_fliped = !is_fliped
-
-        for row in board
-            for square in row
-                square.remove_targeted()
-            end
-        end
     end
 
     return winner
 end
 
-
-
+puts "Welcome to chess"
 winner = game()
+if winner == "draw"
+    puts "The game ended in a draw\nBetter luck next time"
+elsif winner == "stalemate"
+    puts "The game ended in stalemate\nMake sure your opponent will have avalible moves after your next move before you make your move"
+else
+    puts "The winner of the game is #{winner}!"
+end

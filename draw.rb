@@ -1,4 +1,3 @@
-require_relative("pieces.rb")
 require "rainbow"
 using Rainbow
 
@@ -45,7 +44,7 @@ end
 # Argument 1: 2D-Array: spelbrädan
 # Argument 2: Boolean: om brädan ska vara omvänd
 # Argument 3: Array: positioner på rutor som ska vara markerade
-# Datum: 5/5/2024
+# Datum: 6/5/2024
 # Namn: Noah Westerberg
 def draw_board(board, fliped, highlighted_squares)
     if fliped
