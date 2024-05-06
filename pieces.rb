@@ -1,21 +1,56 @@
 Vector2 = Struct.new(:x, :y) do
+    # Beskrivning: Adderar vectorer
+    # Argument 1: Vector2 - vectorn som ska adderas på
+    # Return: Vector2 - den adderade vectorn
+    # Exempel:
+    #          (1, 2) + (3, 0) => (4, 2)
+    #          (5, 4) + (2, 3) => (7, 7)
+    # Datum: 23/4/2024
+    # Namn: Noah Westerberg
     def +(vector)
         return Vector2.new(x + vector.x, y + vector.y)
     end
+
+    # Beskrivning: Subtraherar vectorer
+    # Argument 1: Vector2 - vectorn som ska adderas på
+    # Return: Vector2 - den subtraherade vectorn
+    # Exempel:
+    #          (1, 2) - (3, 0) => (-2, -2)
+    #          (5, 4) - (2, 3) => (3, 1)
+    # Datum: 23/4/2024
+    # Namn: Noah Westerberg
     def -(vector)
         return Vector2.new(x - vector.x, y - vector.y)
     end
+
+    # Beskrivning: Multiplicerar en vector
+    # Argument 1: int/float - talet som vectorn ska multipliceras med
+    # Return: Vector2 - den multiplicerade vectorn
+    # Exempel:
+    #          (1, 2) * 3 => (3, 6)
+    #          (5, 4) * 2 => (10, 8)
+    # Datum: 23/4/2024
+    # Namn: Noah Westerberg
     def *(num)
         return Vector2.new(x * num, y * num)
     end
+
+    # Beskrivning: Dividerar en vector
+    # Argument 1: int/float - talet som vectorn ska divideras med
+    # Return: Vector2 - den dividerade vectorn
+    # Exempel:
+    #          (1, 2) / 3 => (1/3, 2/3)
+    #          (5, 4) / 2 => (5/2, 2)
+    # Datum: 23/4/2024
+    # Namn: Noah Westerberg
     def /(num)
         return Vector2.new(x / num, y / num)
     end
 end
 
-# Beskrivning: Avrundar till 1, -1 eller 0
-# Argument 1: Number/Int/float
-# Return: Int. 1 om värdet är större än sqrt(2) / 2, -1 om värdet är minder än -sqrt(2) / 2 eller annars 0
+# Beskrivning: Avrundar hypotenusan av en vinkel till 1, -1 eller 0
+# Argument 1: int/float
+# Return: Int - 1 om värdet är större än sqrt(2) / 2, -1 om värdet är minder än -sqrt(2) / 2 eller annars 0
 # Exempel:
 #           round_angle(0) => 0
 #           round_angle(1) => 1
@@ -36,15 +71,14 @@ def round_angle(num)
     end
 end
 
-# Beskrivning: Undersöker om en ruta finns på brädan och är en annan färg från pjäsen som använder funktionen och lägger till den i en input array
-# Argument 1: Array, spelbrädan
-# Argument 2: Vector2, positionen av rutan som ska kollas
-# Argument 3: String: användar pjäsens färg
-# Argument 4: Array: output array
+# Beskrivning: Undersöker om en ruta finns på brädan och är en annan färg från pjäsen som använder funktionen och lägger till den i en output array
+# Argument 1: Array - spelbrädan
+# Argument 2: Vector2 - positionen av rutan som ska kollas
+# Argument 3: String - användar pjäsens färg
+# Argument 4: Array - output array
 # Return: 
-#       Piece: Pjäsen som ska undersökas
-#       nil: Det finns ingen pjäs vid positionen
-# Exempel:
+#       Piece - Pjäsen som ska undersökas
+#       nil - Det finns ingen ruta vid positionen
 # Datum: 6/5/2024
 # Namn: Noah Westerberg
 def check_square(board, square_position, color, out)
@@ -61,14 +95,14 @@ def check_square(board, square_position, color, out)
     return nil
 end
 
-# Beskrivning: Undersöker om en ruta finns på brädan och är en annan färg från pjäsen som använder funktionen och lägger till den i en input array
-# Argument 1: Array, spelbrädan
-# Argument 2: Vector2, positionen av rutan som ska kollas
-# Argument 3: String: användar pjäsens färg
-# Argument 4: Array: output array
+# Beskrivning: Undersöker om en ruta finns på brädan och är en annan färg från pjäsen som använder funktionen och lägger till den i en output array. Söker även efter en passant
+# Argument 1: Array - spelbrädan
+# Argument 2: Vector2 - positionen av rutan som ska kollas
+# Argument 3: String - användar pjäsens färg
+# Argument 4: Array - output array
 # Return: 
-#       Piece: Pjäsen som ska undersökas
-#       nil: Det finns ingen pjäs vid positionen
+#       Piece - Pjäsen som ska undersökas
+#       nil - Det finns ingen ruta vid positionen
 # Exempel:
 # Datum: 6/5/2024
 # Namn: Noah Westerberg
@@ -86,15 +120,15 @@ def check_square_en_passant(board, square_position, color, out)
     return nil
 end
 
-# Beskrivning: Lägger till rutor som finns i samma rad från en startposition och returnerar det.
-# Argument 1: Array, spelbrädan
-# Argument 2: Vector2, användarpjäsens position
-# Argument 3: Vector2, hur marökern som sätter in rutorna justeras
-# Argument 4: String: användar pjäsens färg
+# Beskrivning: Lägger till rutor som finns i samma rad från en startposition i en riktning i en output array och returnerar den första rutan som inte är tom 
+# Argument 1: Array - spelbrädan
+# Argument 2: Vector2 - användarpjäsens position
+# Argument 3: Vector2 - hur marökern justeras
+# Argument 4: String - användar pjäsens färg
 # Argument 5: Array: output-array
 # Return: 
-#       Piece: Den första pjäsen på raden
-#       nil: Det är tomt hela vägen till kanten av brädan
+#       Piece - Den första pjäsen på raden
+#       nil - Det är tomt hela vägen till kanten av brädan
 # Exempel:
 #       Argument3/cursor_shift = (0, 0) => oändlig loop
 # Datum: 4/5/2024
@@ -119,11 +153,11 @@ def check_squares_in_line(board, position, cursor_shift, color, out)
 end
 
 # Beskrivning: tar fram närligande rutor runt en ruta
-# Argument 1: 2D-Array: spelbrädan
-# Argument 2: Vector2: rutans position
+# Argument 1: Array - spelbrädan
+# Argument 2: Vector2 - rutans position
 # Return:
-#   Array: positioner av närliggande rutor
-#   nil: det finns inga närliggande rutor
+#   Array - positioner av närliggande rutor
+#   nil - det finns inga närliggande rutor
 # Exempel:
 # Datum: 6/5/2024
 # Namn: Noah Westerberg
@@ -146,11 +180,10 @@ class Piece
     attr_reader :color, :position, :icon
 
     # Beskrivning: Utforskar om en ruta attackeras av en motståndarpjäs
-    # Argument 1: 2D-array: spelbärdan
-    # Argument 2: Vector2: rutan som ska undersökas' position
-    # Argument 3: String: användar pjäsens färg
-    # Return: Bolean
-    # Exempel:
+    # Argument 1: Array - spelbärdan
+    # Argument 2: Vector2 - rutan som ska undersökas' position
+    # Argument 3: String - användar pjäsens färg
+    # Return: Bolean - true om rutan attackeras. false om den inte attackeras
     # Datum: 6/5/2024
     # Namn: Noah Westerberg
     def is_targeted(board, position, color)
@@ -226,12 +259,10 @@ class Piece
         x_dir = -1
         while x_dir <= 1
             check_position = Vector2.new(position.x + x_dir, position.y + pawn_direction)
-            # p "position: #{position} pawn position: #{check_position}"
             check_square = check_square(board, check_position, "", [])
             if check_square != nil
                 if check_square.class == Pawn
                     if check_square.color == target_color
-                        # p "remove"
                         is_targeted = true
                     end
                 end
@@ -257,11 +288,10 @@ class Piece
         return is_targeted
     end
 
-    # Beskrivning: Flyttar pjäsens position. Flytar pjäsen på brädan och lämnar indexet den var på som ett blankt object (inplace). Om det är viktigt för pjäsen så sparas det att den har flytat på sig
-    # Argument 1: Vector2: Positionen som pjäsen ska flyta sig till.
-    # Argument 2: 2D-Array: Spelbrädan
-    # Return: Inget
-    # Exempel:
+    # Beskrivning: Flyttar på pjäsen. Flytar pjäsen på brädan och lämnar indexet den var på som ett blankt object (inplace)
+    # Argument 1: Vector2 - Positionen som pjäsen ska flyta sig till.
+    # Argument 2: Array - Spelbrädan
+    # Return: nil
     # Datum: 4/5/2024
     # Namn: Noah Westerberg
     def move(position, board)
@@ -286,7 +316,7 @@ class En_passant_square < Piece
     end
 
     # Beskrivning: ökar hur många rundor som en passant rutan har funnits. Den tas bort efter att den har varit aktiv i en runda
-    # Argument 1: 2D-Array: spelbrädan
+    # Argument 1: Array - spelbrädan
     # Datum 5/5/2024
     # Namn: Noah Westerberg
     def increment_round(board)
@@ -316,14 +346,12 @@ class Pawn < Piece
     end
 
     # Beskrivning: Undersöker vart det är tillgängligt att flytta till.
-    # Argument 1: 2D-Array: spelbrädan
-    # Return: Vector2[]: tillgängliga positioner
-    # Exempel:
+    # Argument 1: Array - spelbrädan
+    # Return: Array - tillgängliga positioner
     # Datum: 6/5/2024
     # Namn: Noah Westerberg
     def find_moves(board)
         positions = []
-
         check_position = Vector2.new(@position.x, @position.y + @direction)
         if check_position.y < board.length && check_position.y >= 0
             check_square = board[check_position.y][check_position.x]
@@ -354,11 +382,10 @@ class Pawn < Piece
         return positions
     end
 
-    # Beskrivning: Flyttar pjäsens position. Flytar pjäsen på brädan och lämnar indexet den var på som ett blankt object (inplace). Om det är viktigt för pjäsen så sparas det att den har flytat på sig
-    # Argument 1: Vector2: Positionen som pjäsen ska flyta sig till.
-    # Argument 2: 2D-Array: Spelbrädan
-    # Return: Inget
-    # Exempel:
+    # Beskrivning: Flyttar på pjäsen. Flytar pjäsen på brädan och lämnar indexet den var på som ett blankt object (inplace). kollar om en en passant ruta borde läggas till.
+    # Argument 1: Vector2 - Positionen som pjäsen ska flyta sig till.
+    # Argument 2: Array - Spelbrädan
+    # Return: nil
     # Datum: 6/5/2024
     # Namn: Noah Westerberg
     def move(position, board)
@@ -392,10 +419,9 @@ class King < Piece
     end
 
     # Beskrivning: Undersöker vart det är tillgängligt att flytta till.
-    # Argument 1: 2D-Array: spelbrädan
-    # Return: Vector2[]: tillgängliga positioner
-    # Exempel:
-    # Datum: 
+    # Argument 1: Array - spelbrädan
+    # Return: Array - tillgängliga positioner
+    # Datum: 6/5/2024
     # Namn: Noah Westerberg
     def find_moves(board)
         positions = find_adjacent_squares(board, @position)
@@ -441,11 +467,10 @@ class King < Piece
         return positions
     end
 
-    # Beskrivning: Flyttar pjäsens position. Flytar pjäsen på brädan och lämnar indexet den var på som ett blankt object (inplace). Om det är viktigt för pjäsen så sparas det att den har flytat på sig
-    # Argument 1: Vector2: Positionen som pjäsen ska flyta sig till.
-    # Argument 2: 2D-Array: Spelbrädan
-    # Return: Inget
-    # Exempel:
+    # Beskrivning: Flyttar på pjäsen. Flytar pjäsen på brädan och lämnar indexet den var på som ett blankt object (inplace). Kollar om det går att göra rockad
+    # Argument 1: Vector2 - Positionen som pjäsen ska flyta sig till.
+    # Argument 2: Array - Spelbrädan
+    # Return: nil
     # Datum: 6/5/2024
     # Namn: Noah Westerberg
     def move(position, board)
@@ -478,9 +503,8 @@ class Queen < Piece
     end
 
     # Beskrivning: Undersöker vart det är tillgängligt att flytta till.
-    # Argument 1: 2D-Array: spelbrädan
-    # Return: Vector2[]: tillgängliga positioner
-    # Exempel:
+    # Argument 1: Array - spelbrädan
+    # Return: Array - tillgängliga positioner
     # Datum: 24/4/2024
     # Namn: Noah Westerberg
     def find_moves(board)
@@ -511,9 +535,8 @@ class Knight < Piece
     end
 
     # Beskrivning: Undersöker vart det är tillgängligt att flytta till.
-    # Argument 1: 2D-Array: spelbrädan
-    # Return: Vector2 Array: tillgängliga positioner
-    # Exempel:
+    # Argument 1: Array - spelbrädan
+    # Return: Array - tillgängliga positioner
     # Datum: 2/5/2024
     # Namn: Noah Westerberg
     def find_moves(board)
@@ -547,9 +570,8 @@ class Rook < Piece
     end
 
     # Beskrivning: Undersöker vart det är tillgängligt att flytta till.
-    # Argument 1: 2D-Array: spelbrädan
-    # Return: Vector2 Array: tillgängliga positioner
-    # Exempel:
+    # Argument 1: Array - spelbrädan
+    # Return: Array - tillgängliga positioner
     # Datum: 2/5/2024
     # Namn: Noah Westerberg
     def find_moves(board)
@@ -563,11 +585,10 @@ class Rook < Piece
         return positions
     end
 
-    # Beskrivning: Flyttar pjäsens position. Flytar pjäsen på brädan och lämnar indexet den var på som ett blankt object (inplace). Om det är viktigt för pjäsen så sparas det att den har flytat på sig
-    # Argument 1: Vector2: Positionen som pjäsen ska flyta sig till.
-    # Argument 2: 2D-Array: Spelbrädan
-    # Return: Inget
-    # Exempel:
+    # Beskrivning: Flyttar på pjäsen. Flytar pjäsen på brädan och lämnar indexet den var på som ett blankt object (inplace)
+    # Argument 1: Vector2 - Positionen som pjäsen ska flyta sig till.
+    # Argument 2: Array - Spelbrädan
+    # Return: nil
     # Datum: 6/5/2024
     # Namn: Noah Westerberg
     def move(position, board)
@@ -586,9 +607,8 @@ class Bishop < Piece
     end
 
     # Beskrivning: Undersöker vart det är tillgängligt att flytta till.
-    # Argument 1: 2D-Array: spelbrädan
-    # Return: Vector2 Array: tillgängliga positioner
-    # Exempel:
+    # Argument 1: Array - spelbrädan
+    # Return: Array - tillgängliga positioner
     # Datum: 2/5/2024
     # Namn: Noah Westerberg
     def find_moves(board)

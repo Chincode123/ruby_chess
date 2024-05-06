@@ -2,8 +2,10 @@ require "rainbow"
 using Rainbow
 
 # Beskrivning: Omvandlar en position på spelbrädan till rutans betäckning
-# Argument 1: Vector2: positionen som ska omvandlas
-# Return: String: Rutans betäckning, nil: error
+# Argument 1: Vector2 - positionen som ska omvandlas
+# Return: 
+#       String - Rutans betäckning
+#       nil - ogiltig inmatning
 # Exempel:
 #       position_to_square_name(Vector2.new(0, 0)) => a1
 #       position_to_square_name(Vector2.new(7, 7)) => h8
@@ -40,10 +42,10 @@ def position_to_square_name(position)
     end
 end
 
-# Beskrivning: Skriver ut spelbrädan
-# Argument 1: 2D-Array: spelbrädan
-# Argument 2: Boolean: om brädan ska vara omvänd
-# Argument 3: Array: positioner på rutor som ska vara markerade
+# Beskrivning: Ritar ut spelbrädan
+# Argument 1: Array - spelbrädan
+# Argument 2: Boolean - om brädan ska vara omvänd
+# Argument 3: Array - positioner på rutor som ska vara markerade
 # Datum: 6/5/2024
 # Namn: Noah Westerberg
 def draw_board(board, fliped, highlighted_squares)
@@ -56,6 +58,7 @@ def draw_board(board, fliped, highlighted_squares)
         i = board.length - 1
         loop_end_value = -1
     end
+    # looparna går fram-/baklänges beroende på om brädan ska vara vänd eller inte
     while i != loop_end_value
         print "#{i+1}|"
         j = 0

@@ -2,14 +2,17 @@ require_relative "pieces.rb"
 require_relative "draw.rb"
 
 # Beskrivning: Returnerar hur många poäng en pjäs är värd
-# Argument 1: Piece
-# Return: Integer: poängvärdet av pjäsen
+# Argument 1: Piece - pjäsen som ska undersökas
+# Return: 
+#       Integer - poängvärdet av pjäsen
+#       nil - inte en gjlitig pjäs
 # Exempel:
 #       piece_to_points(Pawn) => 1
 #       piece_to_points(Knight) => 3
 #       piece_to_points(Bishop) => 3
 #       piece_to_points(Rook) => 5
 #       piece_to_points(Queen) => 9
+#       piece_to_points(Piece) => nil
 # Noah Westerberg
 # Datum 4/5/2024
 def piece_to_points(piece)
@@ -26,9 +29,8 @@ end
 
 Player = Struct.new(:name, :color) do
     # Beskrivning: Returnerar hur många poäng spelaren har
-    # Argument 1: 2D-Array: Spelbrädan
-    # Return: Integer
-    # Exempel: 
+    # Argument 1: Array - Spelbrädan
+    # Return: Integer - antal poäng som spelaren har
     # Datum 5/5/2024
     # Namn: Noah Westerberg
     def points(board)
@@ -50,8 +52,9 @@ Player = Struct.new(:name, :color) do
 end
 
 # Beskrivning: Initializera spelarna
-# Return: Array: spelarna
-# Exempel: [
+# Return: Array - spelarna
+# Exempel:
+#   initialize_players() => [
 #       #<struct Player name="Player 1", color="white">, 
 #       #<struct Player name="Player 2", color="black">]
 # Datum: 5/5/2024
@@ -63,8 +66,9 @@ def initialize_players()
 end
 
 # Beskrivning: Initializerar spelbrädan
-# Return 2D-Array: spelbrädan
-# Exempel: [[#<Rook:0x0000029b2c237228 @icon="R", @color="white", @position=#<struct Vector2 x=0, y=0>, @has_moved=false, @targeted_by_white=false, @targeted_by_black=false>, #<Knight:0x0000029b2c236ff8 @icon="Kn", @color="white", @position=#<struct Vector2 x=1, y=0>, @targeted_by_white=false, @targeted_by_black=false>, #<Bishop:0x0000029b2c236f58 @icon="B", @color="white", @position=#<struct Vector2 x=2, y=0>, @targeted_by_white=false, @targeted_by_black=false>, #<Queen:0x0000029b2c236e18 @icon="Q", @color="white", @position=#<struct Vector2 x=3, y=0>, @targeted_by_white=false, @targeted_by_black=false>, #<King:0x0000029b2c236eb8 @icon="K", @color="white", @position=#<struct Vector2 x=4, y=0>, @has_moved=false, @targeted_by_white=false, @targeted_by_black=false>, #<Bishop:0x0000029b2c236f08 @icon="B", @color="white", @position=#<struct Vector2 x=5, y=0>, @targeted_by_white=false, @targeted_by_black=false>, #<Knight:0x0000029b2c236fa8 @icon="Kn", @color="white", @position=#<struct Vector2 x=6, y=0>, @targeted_by_white=false, @targeted_by_black=false>, #<Rook:0x0000029b2c237048 @icon="R", @color="white", @position=#<struct Vector2 x=7, y=0>, @has_moved=false, @targeted_by_white=false, @targeted_by_black=false>], [#<Pawn:0x0000029b2c236d78 @icon="P", @color="white", @position=#<struct Vector2 x=0, y=1>, @has_moved=false, @targeted_by_white=false, @targeted_by_black=false, @direction=1>, #<Pawn:0x0000029b2c236d28 @icon="P", @color="white", @position=#<struct Vector2 x=1, y=1>, @has_moved=false, @targeted_by_white=false, @targeted_by_black=false, @direction=1>, #<Pawn:0x0000029b2c236c88 @icon="P", @color="white", @position=#<struct Vector2 x=2, y=1>, @has_moved=false, @targeted_by_white=false, @targeted_by_black=false, @direction=1>, #<Pawn:0x0000029b2c236c38 @icon="P", @color="white", @position=#<struct Vector2 x=3, y=1>, @has_moved=false, @targeted_by_white=false, @targeted_by_black=false, @direction=1>, #<Pawn:0x0000029b2c236be8 @icon="P", @color="white", @position=#<struct Vector2 x=4, y=1>, @has_moved=false, @targeted_by_white=false, @targeted_by_black=false, @direction=1>, #<Pawn:0x0000029b2c236b98 @icon="P", @color="white", @position=#<struct Vector2 x=5, y=1>, @has_moved=false, @targeted_by_white=false, @targeted_by_black=false, @direction=1>, #<Pawn:0x0000029b2c236af8 @icon="P", @color="white", @position=#<struct Vector2 x=6, y=1>, @has_moved=false, @targeted_by_white=false, @targeted_by_black=false, @direction=1>, #<Pawn:0x0000029b2c236aa8 @icon="P", @color="white", @position=#<struct Vector2 x=7, y=1>, @has_moved=false, @targeted_by_white=false, @targeted_by_black=false, @direction=1>], [#<Empty:0x0000029b2c0fc520 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fc3b8 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fc318 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fc228 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fc160 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fbf80 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fbee0 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fbe18 @icon="#", @targeted_by_white=false, @targeted_by_black=false>], [#<Empty:0x0000029b2c0fbda0 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fbc60 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fbb48 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fbaa8 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fba30 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fb918 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fb878 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fb800 @icon="#", @targeted_by_white=false, @targeted_by_black=false>], [#<Empty:0x0000029b2c0fb760 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fb6c0 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fb5f8 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fb580 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fb508 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fb490 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fb418 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fb3a0 @icon="#", @targeted_by_white=false, @targeted_by_black=false>], [#<Empty:0x0000029b2c0fb328 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fb288 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fb1c0 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fb0f8 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fb080 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fafe0 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0faf68 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0faef0 @icon="#", @targeted_by_white=false, @targeted_by_black=false>], [#<Pawn:0x0000029b2c2360f8 @icon="P", @color="black", @position=#<struct Vector2 x=0, y=6>, @has_moved=false, @targeted_by_white=false, @targeted_by_black=false, @direction=-1>, #<Pawn:0x0000029b2c2360a8 @icon="P", @color="black", @position=#<struct Vector2 x=1, y=6>, @has_moved=false, @targeted_by_white=false, @targeted_by_black=false, @direction=-1>, #<Pawn:0x0000029b2c236008 @icon="P", @color="black", @position=#<struct Vector2 x=2, y=6>, @has_moved=false, @targeted_by_white=false, @targeted_by_black=false, @direction=-1>, #<Pawn:0x0000029b2c235fb8 @icon="P", @color="black", @position=#<struct Vector2 x=3, y=6>, @has_moved=false, @targeted_by_white=false, @targeted_by_black=false, @direction=-1>, #<Pawn:0x0000029b2c235f18 @icon="P", @color="black", @position=#<struct Vector2 x=4, y=6>, @has_moved=false, @targeted_by_white=false, @targeted_by_black=false, @direction=-1>, #<Pawn:0x0000029b2c235ec8 @icon="P", @color="black", @position=#<struct Vector2 x=5, y=6>, @has_moved=false, @targeted_by_white=false, @targeted_by_black=false, @direction=-1>, #<Pawn:0x0000029b2c235e28 @icon="P", @color="black", @position=#<struct Vector2 x=6, y=6>, @has_moved=false, @targeted_by_white=false, @targeted_by_black=false, @direction=-1>, #<Pawn:0x0000029b2c235dd8 @icon="P", @color="black", @position=#<struct Vector2 x=7, y=6>, @has_moved=false, @targeted_by_white=false, @targeted_by_black=false, @direction=-1>], [#<Rook:0x0000029b2c2365f8 @icon="R", @color="black", @position=#<struct Vector2 x=0, y=7>, @has_moved=false, @targeted_by_white=false, @targeted_by_black=false>, #<Knight:0x0000029b2c236558 @icon="Kn", @color="black", @position=#<struct Vector2 x=1, y=7>, @targeted_by_white=false, @targeted_by_black=false>, #<Bishop:0x0000029b2c236468 @icon="B", @color="black", @position=#<struct Vector2 x=2, y=7>, @targeted_by_white=false, @targeted_by_black=false>, #<Queen:0x0000029b2c236148 @icon="Q", @color="black", @position=#<struct Vector2 x=3, y=7>, @targeted_by_white=false, @targeted_by_black=false>, #<King:0x0000029b2c2361e8 @icon="K", @color="black", @position=#<struct Vector2 x=4, y=7>, @has_moved=false, @targeted_by_white=false, @targeted_by_black=false>, #<Bishop:0x0000029b2c236238 @icon="B", @color="black", @position=#<struct Vector2 x=5, y=7>, @targeted_by_white=false, @targeted_by_black=false>, #<Knight:0x0000029b2c2364b8 @icon="Kn", @color="black", @position=#<struct Vector2 x=6, y=7>, @targeted_by_white=false, @targeted_by_black=false>, #<Rook:0x0000029b2c2365a8 @icon="R", @color="black", @position=#<struct Vector2 x=7, y=7>, @has_moved=false, @targeted_by_white=false, @targeted_by_black=false>]]
+# Return Array - spelbrädan
+# Exempel: 
+#       initialize_board() => [[#<Rook:0x0000029b2c237228 @icon="R", @color="white", @position=#<struct Vector2 x=0, y=0>, @has_moved=false, @targeted_by_white=false, @targeted_by_black=false>, #<Knight:0x0000029b2c236ff8 @icon="Kn", @color="white", @position=#<struct Vector2 x=1, y=0>, @targeted_by_white=false, @targeted_by_black=false>, #<Bishop:0x0000029b2c236f58 @icon="B", @color="white", @position=#<struct Vector2 x=2, y=0>, @targeted_by_white=false, @targeted_by_black=false>, #<Queen:0x0000029b2c236e18 @icon="Q", @color="white", @position=#<struct Vector2 x=3, y=0>, @targeted_by_white=false, @targeted_by_black=false>, #<King:0x0000029b2c236eb8 @icon="K", @color="white", @position=#<struct Vector2 x=4, y=0>, @has_moved=false, @targeted_by_white=false, @targeted_by_black=false>, #<Bishop:0x0000029b2c236f08 @icon="B", @color="white", @position=#<struct Vector2 x=5, y=0>, @targeted_by_white=false, @targeted_by_black=false>, #<Knight:0x0000029b2c236fa8 @icon="Kn", @color="white", @position=#<struct Vector2 x=6, y=0>, @targeted_by_white=false, @targeted_by_black=false>, #<Rook:0x0000029b2c237048 @icon="R", @color="white", @position=#<struct Vector2 x=7, y=0>, @has_moved=false, @targeted_by_white=false, @targeted_by_black=false>], [#<Pawn:0x0000029b2c236d78 @icon="P", @color="white", @position=#<struct Vector2 x=0, y=1>, @has_moved=false, @targeted_by_white=false, @targeted_by_black=false, @direction=1>, #<Pawn:0x0000029b2c236d28 @icon="P", @color="white", @position=#<struct Vector2 x=1, y=1>, @has_moved=false, @targeted_by_white=false, @targeted_by_black=false, @direction=1>, #<Pawn:0x0000029b2c236c88 @icon="P", @color="white", @position=#<struct Vector2 x=2, y=1>, @has_moved=false, @targeted_by_white=false, @targeted_by_black=false, @direction=1>, #<Pawn:0x0000029b2c236c38 @icon="P", @color="white", @position=#<struct Vector2 x=3, y=1>, @has_moved=false, @targeted_by_white=false, @targeted_by_black=false, @direction=1>, #<Pawn:0x0000029b2c236be8 @icon="P", @color="white", @position=#<struct Vector2 x=4, y=1>, @has_moved=false, @targeted_by_white=false, @targeted_by_black=false, @direction=1>, #<Pawn:0x0000029b2c236b98 @icon="P", @color="white", @position=#<struct Vector2 x=5, y=1>, @has_moved=false, @targeted_by_white=false, @targeted_by_black=false, @direction=1>, #<Pawn:0x0000029b2c236af8 @icon="P", @color="white", @position=#<struct Vector2 x=6, y=1>, @has_moved=false, @targeted_by_white=false, @targeted_by_black=false, @direction=1>, #<Pawn:0x0000029b2c236aa8 @icon="P", @color="white", @position=#<struct Vector2 x=7, y=1>, @has_moved=false, @targeted_by_white=false, @targeted_by_black=false, @direction=1>], [#<Empty:0x0000029b2c0fc520 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fc3b8 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fc318 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fc228 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fc160 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fbf80 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fbee0 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fbe18 @icon="#", @targeted_by_white=false, @targeted_by_black=false>], [#<Empty:0x0000029b2c0fbda0 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fbc60 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fbb48 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fbaa8 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fba30 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fb918 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fb878 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fb800 @icon="#", @targeted_by_white=false, @targeted_by_black=false>], [#<Empty:0x0000029b2c0fb760 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fb6c0 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fb5f8 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fb580 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fb508 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fb490 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fb418 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fb3a0 @icon="#", @targeted_by_white=false, @targeted_by_black=false>], [#<Empty:0x0000029b2c0fb328 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fb288 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fb1c0 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fb0f8 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fb080 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0fafe0 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0faf68 @icon="#", @targeted_by_white=false, @targeted_by_black=false>, #<Empty:0x0000029b2c0faef0 @icon="#", @targeted_by_white=false, @targeted_by_black=false>], [#<Pawn:0x0000029b2c2360f8 @icon="P", @color="black", @position=#<struct Vector2 x=0, y=6>, @has_moved=false, @targeted_by_white=false, @targeted_by_black=false, @direction=-1>, #<Pawn:0x0000029b2c2360a8 @icon="P", @color="black", @position=#<struct Vector2 x=1, y=6>, @has_moved=false, @targeted_by_white=false, @targeted_by_black=false, @direction=-1>, #<Pawn:0x0000029b2c236008 @icon="P", @color="black", @position=#<struct Vector2 x=2, y=6>, @has_moved=false, @targeted_by_white=false, @targeted_by_black=false, @direction=-1>, #<Pawn:0x0000029b2c235fb8 @icon="P", @color="black", @position=#<struct Vector2 x=3, y=6>, @has_moved=false, @targeted_by_white=false, @targeted_by_black=false, @direction=-1>, #<Pawn:0x0000029b2c235f18 @icon="P", @color="black", @position=#<struct Vector2 x=4, y=6>, @has_moved=false, @targeted_by_white=false, @targeted_by_black=false, @direction=-1>, #<Pawn:0x0000029b2c235ec8 @icon="P", @color="black", @position=#<struct Vector2 x=5, y=6>, @has_moved=false, @targeted_by_white=false, @targeted_by_black=false, @direction=-1>, #<Pawn:0x0000029b2c235e28 @icon="P", @color="black", @position=#<struct Vector2 x=6, y=6>, @has_moved=false, @targeted_by_white=false, @targeted_by_black=false, @direction=-1>, #<Pawn:0x0000029b2c235dd8 @icon="P", @color="black", @position=#<struct Vector2 x=7, y=6>, @has_moved=false, @targeted_by_white=false, @targeted_by_black=false, @direction=-1>], [#<Rook:0x0000029b2c2365f8 @icon="R", @color="black", @position=#<struct Vector2 x=0, y=7>, @has_moved=false, @targeted_by_white=false, @targeted_by_black=false>, #<Knight:0x0000029b2c236558 @icon="Kn", @color="black", @position=#<struct Vector2 x=1, y=7>, @targeted_by_white=false, @targeted_by_black=false>, #<Bishop:0x0000029b2c236468 @icon="B", @color="black", @position=#<struct Vector2 x=2, y=7>, @targeted_by_white=false, @targeted_by_black=false>, #<Queen:0x0000029b2c236148 @icon="Q", @color="black", @position=#<struct Vector2 x=3, y=7>, @targeted_by_white=false, @targeted_by_black=false>, #<King:0x0000029b2c2361e8 @icon="K", @color="black", @position=#<struct Vector2 x=4, y=7>, @has_moved=false, @targeted_by_white=false, @targeted_by_black=false>, #<Bishop:0x0000029b2c236238 @icon="B", @color="black", @position=#<struct Vector2 x=5, y=7>, @targeted_by_white=false, @targeted_by_black=false>, #<Knight:0x0000029b2c2364b8 @icon="Kn", @color="black", @position=#<struct Vector2 x=6, y=7>, @targeted_by_white=false, @targeted_by_black=false>, #<Rook:0x0000029b2c2365a8 @icon="R", @color="black", @position=#<struct Vector2 x=7, y=7>, @has_moved=false, @targeted_by_white=false, @targeted_by_black=false>]]
 # Datum 5/5/2024
 # Namn: Noah Westerberg
 def initialize_board()
@@ -119,6 +123,17 @@ def initialize_board()
 
     # Showcase:
     
+    # # En passant:
+    # board[0][4] = King.new(Vector2.new(4, 0), "white")
+    # board[7][4] = King.new(Vector2.new(4, 7), "black")
+    # board[1][3] = Pawn.new(Vector2.new(3, 1), "white")
+    # board[3][4] = Pawn.new(Vector2.new(4, 3), "black")
+    
+    # # Promotion:
+    # board[0][4] = King.new(Vector2.new(4, 0), "white")
+    # board[7][4] = King.new(Vector2.new(4, 7), "black")
+    # board[5][7] = Pawn.new(Vector2.new(7, 5), "white")
+
     # # Castling:
     # board[0][4] = King.new(Vector2.new(4, 0), "white")
     # board[7][4] = King.new(Vector2.new(4, 7), "black")
@@ -126,23 +141,6 @@ def initialize_board()
     # board[7][7] = Rook.new(Vector2.new(7, 7), "black")
     # board[0][0] = Rook.new(Vector2.new(0, 0), "white")
     # board[0][7] = Rook.new(Vector2.new(7, 0), "white")
-
-    # # En passant:
-    # board[0][4] = King.new(Vector2.new(4, 0), "white")
-    # board[7][4] = King.new(Vector2.new(4, 7), "black")
-    # board[1][3] = Pawn.new(Vector2.new(3, 1), "white")
-    # board[3][4] = Pawn.new(Vector2.new(4, 3), "black")
-
-    # # Stalemate:
-    # board[0][4] = King.new(Vector2.new(4, 0), "white")
-    # board[7][0] = King.new(Vector2.new(0, 7), "black")
-    # board[1][1] = Rook.new(Vector2.new(1, 1), "white")
-    # board[1][2] = Rook.new(Vector2.new(2, 1), "white")
-
-    # # Promotion:
-    # board[0][4] = King.new(Vector2.new(4, 0), "white")
-    # board[7][4] = King.new(Vector2.new(4, 7), "black")
-    # board[5][7] = Pawn.new(Vector2.new(7, 5), "white")
 
     # # check:
     # board[0][0] = King.new(Vector2.new(0, 0), "white")
@@ -155,19 +153,27 @@ def initialize_board()
     # board[4][4] = Pawn.new(Vector2.new(4, 4), "black")
     # board[7][1] = Knight.new(Vector2.new(1, 7), "black")
     # board[2][5] = Bishop.new(Vector2.new(5, 2), "white")
-
+    
     # # checkmate:
     # board[0][4] = King.new(Vector2.new(4, 0), "white")
     # board[7][0] = King.new(Vector2.new(0, 7), "black")
     # board[1][1] = Rook.new(Vector2.new(1, 1), "white")
     # board[6][5] = Queen.new(Vector2.new(5, 6), "white")
-
+    
+        # # Stalemate:
+        # board[0][4] = King.new(Vector2.new(4, 0), "white")
+        # board[7][0] = King.new(Vector2.new(0, 7), "black")
+        # board[1][1] = Rook.new(Vector2.new(1, 1), "white")
+        # board[1][2] = Rook.new(Vector2.new(2, 1), "white")
+    
     return board
 end
 
 # Beskrivning: Omvandlar en rutbetäckning till cordinater
-# Argument 1: String: rutbetöckning. De första två karaktärerna ska vara rutbetäckningen 
-# Return: Vector2: cordinater. nil: error
+# Argument 1: String - rutbetöckning
+# Return: 
+#       Vector2 - cordinater
+#       nil: felaktig input
 # Exempel:
 #       square_to_coordinets("a1") => (0, 0)
 #       square_to_coordinets("h8") => (7, 7) 
@@ -213,11 +219,15 @@ def square_to_coordinets(square)
 end
 
 # Beskrivning: Omvandlar kordinater till rutbetäckning
-# Argument 1: Vector2: Rutans position
-# Return: String: Rutans betäckning
+# Argument 1: Vector2 - Rutans position
+# Return: 
+#       String - Rutans betäckning
+#       nil - felaktig input
 # Exempel:
-#       
-# Datum: 5/5/2024
+#       coordinets_to_square(Vector2.new(0, 0)) => a1
+#       coordinets_to_square(Vector2.new(7, 7)) => h8
+#       coordinets_to_square(Vector2.new(235, 635)) => nil
+# Datum: 6/5/2024
 # Namn: Noah Westerberg
 def coordinets_to_square(coordinets)
     square = ""
@@ -239,12 +249,16 @@ def coordinets_to_square(coordinets)
         square.concat("h")
     end
     square.concat("#{coordinets.y + 1}")
-    return square
+    if square.length == 2
+        return square
+    else
+        return nil
+    end
 end
 
-# Beskrivning: Input-function som kollar efter oavgjort
-# Argument 1: String: output sträng där inputen går till om det inte blir oavgjort
-# Return: Bolean: true om det är oavgjort
+# Beskrivning: Input-function som letear efter oavgjort
+# Argument 1: String - output sträng där inputen går till om det inte blir oavgjort
+# Return: Bolean - true om det ska bli oavgjort, annars false
 # Exempel:
 #       get_input(), användaren skriver "a1", => false
 #       get_input(), användaren skriver "f3", => false
@@ -270,11 +284,11 @@ def get_input(out)
     return false
 end
 
-# Beskrivning: Input function för att få kordinaterna för en ruta. Functionen har validering så att det bara går att skriva in giltiga inputs.
+# Beskrivning: Input function för att få kordinaterna för en ruta. Functionen har validering så att det bara går att skriva in giltiga inputs. Functionen är recursiv
 # Return: 
-#       Vector2: cordinaterna för rutan som är vald
-#       String: "draw" för att aktivera att det blir oavgjort
-#       nil: Inget anges
+#       Vector2 - cordinaterna för rutan som är vald
+#       String - "draw" för att aktivera att det blir oavgjort
+#       nil - Inget anges
 # Exempel:
 #       input_square(), användaren skriver "a1", => square_to_cordinets(a1) => <struct Vector2 x=0, y=0>
 #       input_square(), användaren skriver "f3", => square_to_cordinets(f3) => <struct Vector2 x=5, y=4>
@@ -300,9 +314,9 @@ def input_square()
     return position
 end
 
-# Beskrivning: Lägger till ett "+" om poängen är större än eller lika med 0
-# Argument 1: Integer: poäng
-# Return: String: poäng som sträng
+# Beskrivning: Returnerar text för hur många poäng en spelare har. Lägger till ett "+" om poängen är större än eller lika med 0
+# Argument 1: Integer - poäng
+# Return: String - poäng som sträng
 # Exempel:
 #       player_points_text(0) => "+0"
 #       player_points_text(6) => "+6"
@@ -317,10 +331,10 @@ def player_points_text(points)
 end
 
 # Beskrivning: Skriver ut spelbrädan och spelarnas information
-# Argument 1: 2D-Array: spelbrädan
-# Argument 2: Bolean: om brädan ska vara omvänd eller inte
-# Argument 3: Array av Vector2: vilka rutor som ska vara markerade 
-# Argument 4: Array: spelarna
+# Argument 1: Array - spelbrädan
+# Argument 2: Bolean - om brädan ska vara omvänd eller inte
+# Argument 3: Array - vilka rutor som ska vara markerade 
+# Argument 4: Array - spelarna
 # Datum: 5/5/2024
 # Namn: Noah Westerberg
 def display_game(board, fliped, highlighted_squares, players)
@@ -340,8 +354,8 @@ def display_game(board, fliped, highlighted_squares, players)
 end
 
 # Beskrivning: Promoverar en bonde
-# Argument 1: 2D-Array: spelbrädan
-# Argument 2: Vector2: bondens position
+# Argument 1: Array - spelbrädan
+# Argument 2: Vector2 - bondens position
 # Datum: 5/5/2024
 # Namn: Noah Westerberg
 def promote_pawn(board, position)
@@ -367,11 +381,11 @@ def promote_pawn(board, position)
     end
 end
 
-# Beskrivning: kopierar en spelbräda och flyttar en pjäs på den
-# Argument 1: 2D-Array: spelbrädan
-# Argument 2: Vector2: positionen av pjäsen som ska flyttas
-# Argument 3: Vector2: positionen som pjäsen ska flyttas till
-# Return 2D-Array: kopian av brädan
+# Beskrivning: Kopierar spelbrädan, flyttar en pjäs på den och returnerar kopian
+# Argument 1: Array - spelbrädan
+# Argument 2: Vector2 - positionen av pjäsen som ska flyttas
+# Argument 3: Vector2 - positionen som pjäsen ska flyttas till
+# Return Array - kopian av brädan
 # Datum 6/5/2024
 # Namn: Noah Westerberg
 def move_on_board(board, piece_position, move_position)
@@ -380,12 +394,12 @@ def move_on_board(board, piece_position, move_position)
     return new_board
 end
 
-# Beskrivning: undersöker om en kung är attackerad
-# Argument 1: 2D-Array: spelbrädan
-# Argument 2: String: färgen på kungen som ska undersökas
+# Beskrivning: Undersöker om en kung är attackerad
+# Argument 1: Array - spelbrädan
+# Argument 2: String - färgen på kungen som ska undersökas
 # Return:
-#       Bolean: true: om kungen är attackerad, annars: false
-#       nil: det finns ingen kung av den inmatade färgen på brädan
+#       Bolean - true om kungen är attackerad, annars false
+#       nil - det finns ingen kung av den inmatade färgen på brädan
 # Datum: 6/5/2024
 # Namn: Noah Westerberg
 def is_king_attacked(board, color)
@@ -402,7 +416,7 @@ def is_king_attacked(board, color)
 end
 
 # Beskrivning: Game-loop
-# Return: String: Vinnaren
+# Return: String - Vinnaren
 # Exempel:
 #       game() => players[0].name
 #       game() => players[1].name
@@ -414,6 +428,7 @@ def game()
     players = initialize_players()
     board = initialize_board()
 
+    # Låt spelarna mata in namn
     for player in players
         name = player.name
         enterd_name = "no"
@@ -437,6 +452,7 @@ def game()
     puts "Game Start!\n#{players[0].name} vs #{players[1].name}\nEnter \"draw\" at any time to end the game in a draw"
     continue_playing = true
     while continue_playing
+        # bestäm vems tur det är
         current_player = 0
         if turn % 2 == 0
             current_player = 0
@@ -444,6 +460,7 @@ def game()
             current_player = 1
         end
 
+        # undersök om spelet ska fortsätta
         all_avalible_positions = []
         for row in board
             for square in row
@@ -483,6 +500,7 @@ def game()
         while !has_moved
             display_game(board, is_fliped, [], players)
             puts "#{players[current_player].color.upcase} to move"
+            # bestäm vilken pjäs som ska flyttas
             puts "Enter the square you want to select"
             selected_square = Empty.new
             avalible_positions = []
@@ -516,12 +534,13 @@ def game()
             
             display_game(board, is_fliped, avalible_positions, players)
 
+            # bestäm vart pjösen ska flytta till
             new_move = false
             puts "Select the square you want your piece to move to\nPress ENTER to select another piece to move"
             move_coordinets = nil
             while !avalible_positions.include?(move_coordinets)
                 if move_coordinets != nil
-                    puts "\"#{position_to_square_name(move_coordinets)}\" is not an avalible position"
+                    puts "\"#{coordinets_to_square(move_coordinets)}\" is not an avalible position"
                 end
                 move_coordinets = input_square()
                 if move_coordinets == nil
@@ -534,12 +553,11 @@ def game()
                     break
                 end
             end
-            if new_move == true
-                next
-            elsif continue_playing == false
+            if new_move == true || continue_playing == false
                 break
             end
           
+            # undersök om det är ett giltigt drag
             new_board = move_on_board(board, selected_square.position, move_coordinets)
             if !is_king_attacked(new_board, players[current_player].color)
                 board = Marshal.load(Marshal.dump(new_board))
@@ -564,6 +582,7 @@ def game()
     return winner
 end
 
+# Game:
 puts "Welcome to chess"
 winner = game()
 if winner == "draw"
