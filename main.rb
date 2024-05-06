@@ -554,7 +554,9 @@ def game()
                     break
                 end
             end
-            if new_move == true || continue_playing == false
+            if new_move == true 
+                next
+            elsif continue_playing == false
                 break
             end
           
