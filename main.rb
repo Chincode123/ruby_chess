@@ -86,6 +86,7 @@ def initialize_board()
 
     
     # Normal setup:
+
     # white pieces
     board[0][0] = Rook.new(Vector2.new(0, 0), "white")
     board[0][7] = Rook.new(Vector2.new(7, 0), "white")
@@ -144,15 +145,15 @@ def initialize_board()
 
     # # check:
     # board[0][0] = King.new(Vector2.new(0, 0), "white")
-    # board[5][4] = King.new(Vector2.new(4, 5), "black")
-    # board[5][3] = Pawn.new(Vector2.new(3, 5), "black")
-    # board[5][5] = Pawn.new(Vector2.new(5, 5), "black")
-    # board[6][4] = Pawn.new(Vector2.new(4, 6), "black")
-    # board[6][5] = Pawn.new(Vector2.new(5, 6), "black")
-    # board[4][3] = Pawn.new(Vector2.new(3, 4), "black")
+    # board[4][3] = King.new(Vector2.new(3, 4), "black")
+    # board[5][2] = Pawn.new(Vector2.new(2, 5), "black")
+    # board[4][2] = Pawn.new(Vector2.new(2, 4), "black")
     # board[4][4] = Pawn.new(Vector2.new(4, 4), "black")
-    # board[7][1] = Knight.new(Vector2.new(1, 7), "black")
-    # board[2][5] = Bishop.new(Vector2.new(5, 2), "white")
+    # board[5][3] = Pawn.new(Vector2.new(3, 5), "black")
+    # board[5][4] = Pawn.new(Vector2.new(4, 5), "black")
+    # board[3][2] = Pawn.new(Vector2.new(2, 3), "black")
+    # board[3][3] = Pawn.new(Vector2.new(3, 3), "black")
+    # board[1][4] = Bishop.new(Vector2.new(4, 1), "white")
     
     # # checkmate:
     # board[0][4] = King.new(Vector2.new(4, 0), "white")
