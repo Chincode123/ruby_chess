@@ -176,6 +176,73 @@ def find_adjacent_squares(board, position)
     end
 end
 
+# Beskrivning: Kopierar spelbrädan, flyttar en pjäs på den och returnerar kopian
+# Argument 1: Array - spelbrädan
+# Argument 2: Vector2 - positionen av pjäsen som ska flyttas
+# Argument 3: Vector2 - positionen som pjäsen ska flyttas till
+# Return Array - kopian av brädan
+# Datum 6/5/2024
+# Namn: Noah Westerberg
+def move_on_board(board, piece_position, move_position)
+    new_board = Marshal.load(Marshal.dump(board))
+    new_board[piece_position.y][piece_position.x].move(move_position, new_board)
+    return new_board
+end
+
+# Beskrivning: Undersöker om en kung är attackerad
+# Argument 1: Array - spelbrädan
+# Argument 2: String - färgen på kungen som ska undersökas
+# Return:
+#       Bolean - true om kungen är attackerad, annars false
+#       nil - det finns ingen kung av den inmatade färgen på brädan
+# Datum: 6/5/2024
+# Namn: Noah Westerberg
+def is_king_attacked(board, color)
+    for row in board
+        for square in row
+            if square.class == King
+                if square.color == color
+                    return square.is_targeted(board, square.position, color)
+                end
+            end
+        end
+    end
+    return nil
+end
+
+# Beskrivning: Undersöker om en kung är attackerad efter en move
+# Argument 1: Array - spelbrädan
+# Argument 2: Vector2 - positionen av pjäsen som ska flytas
+# Argument 3: Vector2 - positionen pjäsen ska flyttas till
+# Argument 4: String - färgen av kungen som ska kollas
+# Return:
+#       Bolean - true om kungen är attackerad, annars false
+# Datum: 7/5/2024
+# Namn: Noah Westerberg
+def check_move(board, piece_position, move_position, color)
+    new_board = move_on_board(board, piece_position, move_position)
+    return is_king_attacked(new_board, color)
+end
+
+# Beskrivning: Validerar moves. Tar bort en tilgänlig position om kungen attackeras
+# Argument 1: Array - spelbrädan
+# Argument 2: Vector2 - positionen av pjäsen som ska flytas
+# Argument 3: Array - positionerna pjäsen ska flyttas till
+# Argument 4: String - färgen av kungen som ska kollas
+# Return: nil
+# Datum: 7/5/2024
+# Namn: Noah Westerberg
+def validate_moves(board, piece_position, move_positions, color)
+    i = 0
+    while i < move_positions.length
+        if check_move(board, piece_position, move_positions[i], color)
+            move_positions.delete_at(i)
+        else
+            i += 1
+        end
+    end
+end
+
 class Piece
     attr_reader :color, :position, :icon
 
@@ -379,6 +446,8 @@ class Pawn < Piece
             x += 2
         end
 
+        validate_moves(board, @position, positions, @color)
+
         return positions
     end
 
@@ -428,16 +497,13 @@ class King < Piece
         if positions != nil
             i = 0
             while i < positions.length
-                check_square = board[positions[i].y][positions[i].x]
-                if check_square.is_targeted(board, positions[i], @color)
-                    positions.delete_at(i)
-                    next
-                elsif check_square.color == @color
+                if  board[positions[i].y][positions[i].x].color == @color
                     positions.delete_at(i)
                     next
                 end
                 i += 1
             end
+            validate_moves(board, @position, positions, @color)
         end
 
         if @has_moved == false
@@ -523,6 +589,9 @@ class Queen < Piece
             end
             x_dir += 1
         end
+
+        validate_moves(board, @position, positions, @color)
+
         return positions
     end
 end
@@ -553,6 +622,8 @@ class Knight < Piece
             x_dir += 2
         end
 
+        validate_moves(board, @position, positions, @color)
+
         return positions
     end
 end
@@ -581,6 +652,8 @@ class Rook < Piece
         check_squares_in_line(board, @position, Vector2.new(-1, 0), @color, positions)
         check_squares_in_line(board, @position, Vector2.new(0, 1), @color, positions)
         check_squares_in_line(board, @position, Vector2.new(0, -1), @color, positions) 
+
+        validate_moves(board, @position, positions, @color)
 
         return positions
     end
@@ -623,6 +696,8 @@ class Bishop < Piece
             end
             x_dir += 2
         end
+
+        validate_moves(board, @position, positions, @color)
 
         return positions
     end

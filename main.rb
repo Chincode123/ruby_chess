@@ -124,18 +124,18 @@ def initialize_board()
 
     # Showcase:
     
-    # # En passant:
+    # En passant:
     # board[0][4] = King.new(Vector2.new(4, 0), "white")
     # board[7][4] = King.new(Vector2.new(4, 7), "black")
     # board[1][3] = Pawn.new(Vector2.new(3, 1), "white")
     # board[3][4] = Pawn.new(Vector2.new(4, 3), "black")
     
-    # # Promotion:
+    # Promotion:
     # board[0][4] = King.new(Vector2.new(4, 0), "white")
     # board[7][4] = King.new(Vector2.new(4, 7), "black")
     # board[5][7] = Pawn.new(Vector2.new(7, 5), "white")
 
-    # # Castling:
+    # Castling:
     # board[0][4] = King.new(Vector2.new(4, 0), "white")
     # board[7][4] = King.new(Vector2.new(4, 7), "black")
     # board[7][0] = Rook.new(Vector2.new(0, 7), "black")
@@ -143,7 +143,7 @@ def initialize_board()
     # board[0][0] = Rook.new(Vector2.new(0, 0), "white")
     # board[0][7] = Rook.new(Vector2.new(7, 0), "white")
 
-    # # check:
+    # check:
     # board[0][0] = King.new(Vector2.new(0, 0), "white")
     # board[4][3] = King.new(Vector2.new(3, 4), "black")
     # board[5][2] = Pawn.new(Vector2.new(2, 5), "black")
@@ -155,17 +155,17 @@ def initialize_board()
     # board[3][3] = Pawn.new(Vector2.new(3, 3), "black")
     # board[1][4] = Bishop.new(Vector2.new(4, 1), "white")
     
-    # # checkmate:
+    # checkmate:
     # board[0][4] = King.new(Vector2.new(4, 0), "white")
     # board[7][0] = King.new(Vector2.new(0, 7), "black")
     # board[1][1] = Rook.new(Vector2.new(1, 1), "white")
     # board[6][5] = Queen.new(Vector2.new(5, 6), "white")
     
-        # # Stalemate:
-        # board[0][4] = King.new(Vector2.new(4, 0), "white")
-        # board[7][0] = King.new(Vector2.new(0, 7), "black")
-        # board[1][1] = Rook.new(Vector2.new(1, 1), "white")
-        # board[1][2] = Rook.new(Vector2.new(2, 1), "white")
+    # Stalemate:
+    # board[0][4] = King.new(Vector2.new(4, 0), "white")
+    # board[7][0] = King.new(Vector2.new(0, 7), "black")
+    # board[1][1] = Rook.new(Vector2.new(1, 1), "white")
+    # board[1][2] = Rook.new(Vector2.new(2, 1), "white")
     
     return board
 end
@@ -382,40 +382,6 @@ def promote_pawn(board, position)
     end
 end
 
-# Beskrivning: Kopierar spelbrädan, flyttar en pjäs på den och returnerar kopian
-# Argument 1: Array - spelbrädan
-# Argument 2: Vector2 - positionen av pjäsen som ska flyttas
-# Argument 3: Vector2 - positionen som pjäsen ska flyttas till
-# Return Array - kopian av brädan
-# Datum 6/5/2024
-# Namn: Noah Westerberg
-def move_on_board(board, piece_position, move_position)
-    new_board = Marshal.load(Marshal.dump(board))
-    new_board[piece_position.y][piece_position.x].move(move_position, new_board)
-    return new_board
-end
-
-# Beskrivning: Undersöker om en kung är attackerad
-# Argument 1: Array - spelbrädan
-# Argument 2: String - färgen på kungen som ska undersökas
-# Return:
-#       Bolean - true om kungen är attackerad, annars false
-#       nil - det finns ingen kung av den inmatade färgen på brädan
-# Datum: 6/5/2024
-# Namn: Noah Westerberg
-def is_king_attacked(board, color)
-    for row in board
-        for square in row
-            if square.class == King
-                if square.color == color
-                    return square.is_targeted(board, square.position, color)
-                end
-            end
-        end
-    end
-    return nil
-end
-
 # Beskrivning: Game-loop
 # Return: String - Vinnaren
 # Exempel:
@@ -462,7 +428,7 @@ def game()
         end
 
         # undersök om spelet ska fortsätta
-        all_avalible_positions = []
+        avalible_positions = []
         for row in board
             for square in row
                 if square.class == Empty 
@@ -470,23 +436,13 @@ def game()
                 elsif square.class == En_passant_square
                     square.increment_round(board)
                 else
-                    avalible_positions = []
                     if square.color == players[current_player].color
                         avalible_positions.concat(square.find_moves(board))
                     end
-                    i = 0
-                    while i < avalible_positions.length
-                        if is_king_attacked(move_on_board(board, square.position, avalible_positions[i]), players[current_player].color)
-                            avalible_positions.delete_at(i)
-                        else
-                            i += 1
-                        end
-                    end
                 end
-                all_avalible_positions.concat(avalible_positions)
             end
         end
-        if all_avalible_positions.length == 0
+        if avalible_positions.length == 0
             if is_king_attacked(board, players[current_player].color)
                 winner = players[1 - current_player].name
             else
@@ -559,19 +515,15 @@ def game()
             elsif continue_playing == false
                 break
             end
-          
-            # undersök om det är ett giltigt drag
-            new_board = move_on_board(board, selected_square.position, move_coordinets)
-            if !is_king_attacked(new_board, players[current_player].color)
-                board = Marshal.load(Marshal.dump(new_board))
-                has_moved = true
-                if move_coordinets.y == 0 || move_coordinets.y == 7
-                    if board[move_coordinets.y][move_coordinets.x].class == Pawn
-                        promote_pawn(board, move_coordinets)
-                    end
+
+            board[square_coordinets.y][square_coordinets.x].move(move_coordinets, board)
+            has_moved = true
+
+            # pawn promotion
+            if move_coordinets.y == 0 || move_coordinets.y == 7
+                if board[move_coordinets.y][move_coordinets.x].class == Pawn
+                    promote_pawn(board, move_coordinets)
                 end
-            else
-                puts "Illegal move: You cannot leave your King open for attack"
             end
         end
         if continue_playing == false
