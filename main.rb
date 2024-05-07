@@ -463,8 +463,12 @@ def game(replay)
             avalible_positions = []
             while avalible_positions.length == 0
                 display_game(board, is_fliped, [], players, 100)
-                puts "#{players[current_player].color.upcase} to move"
-                puts "Enter the square you want to select"
+                if selected_square.class != Empty && selected_square.class != En_passant_square
+                    puts "The piece you selected has no avalible moves. Select another piece"
+                else
+                    puts "#{players[current_player].color.upcase} to move"
+                    puts "Enter the square you want to select"
+                end
                 selected_square = Empty.new
                 while selected_square.color != players[current_player].color
                     if selected_square.class != Empty && selected_square.class != En_passant_square
@@ -492,13 +496,12 @@ def game(replay)
                 break
             end
             
-            display_game(board, is_fliped, avalible_positions, players, 100)
-
             # bestäm vart pjösen ska flytta till
             new_move = false
-            puts "Select the square you want your piece to move to\nPress ENTER to select another piece to move"
             move_coordinets = nil
             while !avalible_positions.include?(move_coordinets)
+                display_game(board, is_fliped, avalible_positions, players, 100)
+                puts "Select the square you want your piece to move to\nPress ENTER to select another piece to move"
                 if move_coordinets != nil
                     puts "\"#{coordinets_to_square(move_coordinets)}\" is not an avalible position"
                 end
