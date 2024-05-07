@@ -336,9 +336,10 @@ end
 # Argument 2: Bolean - om brädan ska vara omvänd eller inte
 # Argument 3: Array - vilka rutor som ska vara markerade 
 # Argument 4: Array - spelarna
+# Argument 5: Integer - hur många blanksteg som ska göras innan spelet ritas ut
 # Datum: 5/5/2024
 # Namn: Noah Westerberg
-def display_game(board, fliped, highlighted_squares, players)
+def display_game(board, fliped, highlighted_squares, players, blank_spaces)
     top_text = ""
     bottom_text = ""
     if fliped
@@ -349,6 +350,7 @@ def display_game(board, fliped, highlighted_squares, players)
         bottom_text = "#{players[0].name} (#{player_points_text(players[0].points(board) - players[1].points(board))}) #{players[0].color.upcase}"
     end
     
+    print "\n" * blank_spaces
     puts top_text
     draw_board(board, fliped, highlighted_squares)
     puts bottom_text
@@ -384,14 +386,15 @@ end
 
 # Beskrivning: Game-loop
 # Return: String - Vinnaren
+# Argument 1: Array - Varje move läggs in här
 # Exempel:
 #       game() => players[0].name
 #       game() => players[1].name
 #       game() => "draw"
 #       game() => "stalemate"
-# Datum 6/5/2024
+# Datum 7/5/2024
 # Namn: Noah Westerberg
-def game()
+def game(replay)
     players = initialize_players()
     board = initialize_board()
 
@@ -409,7 +412,6 @@ def game()
             enterd_name = gets.chomp
         end
         player.name = name
-        print "\n" * 0
     end
     
     winner = ""
@@ -419,6 +421,7 @@ def game()
     puts "Game Start!\n#{players[0].name} vs #{players[1].name}\nEnter \"draw\" at any time to end the game in a draw"
     continue_playing = true
     while continue_playing
+        replay.append(Marshal.load(Marshal.dump(board)))
         # bestäm vems tur det är
         current_player = 0
         if turn % 2 == 0
@@ -448,20 +451,20 @@ def game()
             else
                 winner = "stalemate"
             end
-            display_game(board, !is_fliped, [], players)
+            display_game(board, !is_fliped, [], players, 100)
             continue_playing = false
             break
         end
 
         has_moved = false
         while !has_moved
-            display_game(board, is_fliped, [], players)
-            puts "#{players[current_player].color.upcase} to move"
             # bestäm vilken pjäs som ska flyttas
-            puts "Enter the square you want to select"
             selected_square = Empty.new
             avalible_positions = []
             while avalible_positions.length == 0
+                display_game(board, is_fliped, [], players, 100)
+                puts "#{players[current_player].color.upcase} to move"
+                puts "Enter the square you want to select"
                 selected_square = Empty.new
                 while selected_square.color != players[current_player].color
                     if selected_square.class != Empty && selected_square.class != En_passant_square
@@ -489,7 +492,7 @@ def game()
                 break
             end
             
-            display_game(board, is_fliped, avalible_positions, players)
+            display_game(board, is_fliped, avalible_positions, players, 100)
 
             # bestäm vart pjösen ska flytta till
             new_move = false
@@ -537,13 +540,29 @@ def game()
     return winner
 end
 
+game_replay = []
+
 # Game:
 puts "Welcome to chess"
-winner = game()
+winner = game(game_replay)
 if winner == "draw"
     puts "The game ended in a draw\nBetter luck next time"
 elsif winner == "stalemate"
     puts "The game ended in stalemate\nMake sure your opponent will have avalible moves after your next move before you make your move"
 else
     puts "The winner of the game is #{winner}!"
+end
+
+puts "Do you want to show a replay of the game\nEnter \"yes\" to confirm"
+input = "input"
+while input != ""
+    input = gets.chomp
+    if input.downcase == "yes"
+        is_fliped = false
+        for board in game_replay
+            display_game(board, is_fliped, [], initialize_players(), 1)
+            is_fliped = !is_fliped
+        end
+        input = ""
+    end
 end
